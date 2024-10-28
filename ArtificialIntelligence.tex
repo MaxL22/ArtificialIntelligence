@@ -27,12 +27,12 @@
 \MakeOuterQuote{"}
 %\DeclareMathOperator{\sgn}{sgn}			%sgn operator
 \lstset{basicstyle=\ttfamily,language=c,keywordstyle=\color{blue}, showstringspaces=false} %Command is \begin{lstlisting}
-
-\usepackage{bm}
-\usepackage[most]{tcolorbox}
-\DeclareMathOperator*{\dom}{dom}
-
-
+	
+	\usepackage{bm}
+	\usepackage[most]{tcolorbox}
+	\DeclareMathOperator*{\dom}{dom}
+	
+	
 	\begin{document}
 		\initcurrdate
 		\maketitle 									%Titolo 
@@ -470,8 +470,8 @@
 			
 		\end{itemize}
 		The sets $U_{in}$ and $U_{out}$ don't need to be disjoint; a neuron can be both input and output.\\
-
-
+		
+		
 		
 		\subsubsection{General structure of a neuron}
 		Each \textbf{connection} (arc from a neuron to the other) $(v,u) \in C$ \textbf{possesses a weight} $w_{uv}$.\\
@@ -709,7 +709,7 @@
 				0, & \text{ otherwise}
 			\end{cases} $$
 			\item Semi-linear function (right):
-				$$ f_{act} (net, \theta) = \begin{cases}
+			$$ f_{act} (net, \theta) = \begin{cases}
 				1, \;\; & \text{ if } net > \theta + \frac{1}{2} \\
 				0, & \text{ if } net < \theta - \frac{1}{2} \\
 				(net - \theta) + \frac{1}{2} & \text{ otherwise}
@@ -723,7 +723,7 @@
 		
 		\begin{itemize}
 			\item Sine until saturation (left):
-				$$ f_{act} (net, \theta) = \begin{cases}
+			$$ f_{act} (net, \theta) = \begin{cases}
 				1, \;\; & \text{ if } net > \theta + \frac{\pi}{2} \\
 				0, & \text{ if } net < \theta - \frac{\pi}{2} \\
 				\frac{\sin(net - \theta) + 1}{2} & \text{ otherwise } 
@@ -1143,7 +1143,7 @@
 		The process can repeat for all layers.\\
 		
 		The error values of any (hidden) layer of an MLP can be computed from the error values of its successor. The sum of the errors of the weights of the last layer becomes the error function to minimize for the weights of the layer before that.\\
-		 
+		
 		The error is computed at the end of the network and then \textbf{backpropagated}, we need to modify all the weights in the network. The error signal is transmitted from the output layer backwards.\\
 		
 		\newpage
@@ -1294,7 +1294,7 @@
 		The great capabilities of NNs also make it difficult to understand exactly what they're doing, the \textbf{knowledge learned} is often \textbf{encoded in matrices/vectors} of real-valued numbers, often \textbf{difficult to understand or extract}. Geometric interpretation are only possible for very simple networks. A NN effectively becomes a \textit{black box}.\\
 		
 		We have no real way to know what's inside the network, but we can have a \textbf{sensitivity analysis} can be useful to find out \textbf{to which inputs the output(s) react(s) most sensitively}; we want to find out what parts of the input influence the output and how. This can give information about which inputs are not needed and may be discarded. Basically we want to answer \textit{"How much the output of each neuron is changing if we change
-		the data set for training (still describing the desired behavior)?"}.\\
+			the data set for training (still describing the desired behavior)?"}.\\
 		
 		The approach is to \textbf{determine the change of output relative to the change of input}:
 		$$ \forall u \in U_{in}: \;\; s(u) = \frac{1}{|L_{fixed}|} \sum_{l \in L_{fixed}} \sum_{v \in U_{out}} \frac{\partial out_v^{(l)}}{\partial ext_u^{(l)}} $$
@@ -1474,7 +1474,7 @@
 			\end{center}
 		\end{itemize}
 		
-		Each neuron can have its own function, maybe different $\sigma$, the function is activated based on the distance between weight and input; the weight vector acts as center for the function and the activation is proportional to how far the input is to that radial function. Each neuron has a function centered in a different place. This draws a circle (or equivalent) in the feature space, while an MLP draws a line.\\
+		Each neuron can have its own function, maybe just with different $\sigma$, the function is activated based on the distance between weight and input; the weight vector acts as center for the function and the activation is proportional to how far the input is to that radial function. Each neuron has a function centered in a different place. This draws a circle (or equivalent) in the feature space, while an MLP draws a line.\\
 		
 		\paragraph{Example:} RBF network for the conjunction $x_1 \wedge x_2$. We want to create a circle around the area in which the output is 1:
 		\begin{center}
@@ -1517,6 +1517,227 @@
 		
 		% End NN L10, pag 64
 		
+		\newpage
+		
+		\subsubsection{Training Radial Basis Function Networks}
+		We'll consider a case of supervised learning with a \textbf{fixed task} $L_{fixed} = \{l_1, \, ... \, , l_m\}$ with $m$ training patterns $l = \left(\vec{i}^{(l)}, \vec{o}^{(l)}\right)$.\\
+		
+		Considering a \textbf{simple radial basis function network} which is a partial view of the general structure of a RBFN, where \textbf{each training example is covered by its own radial basis function}. One hidden neuron $v_k$, $k = 1, \, ... \, , m$ for each training pattern
+		$$ \forall k \in \{1, \, ... \, , m\}: \, \vec{w}_{v_k} = \vec{i}^{(l_k)} $$
+		
+		The weights of the connections to the hidden neurons are simply initialized with the elements of the input vector of this training example.\\
+		
+		If the \textbf{activation function} is \textbf{Gaussian}, the radii $\sigma_k$ are \textbf{chosen heuristically}:
+		$$ \forall k \in \{1, \, ... \, , m\}: \, \sigma_k = \frac{d_{max}}{\sqrt{2m}} $$
+		$d_{max}$ is the \textbf{maximal distance} between the \textbf{input vectors} of two training patterns
+		$$ d_{max} = \max_{l_j, l_k \in L_{fixed}} d\left(\vec{l}^{(l_j)}. \vec{l}^{(l_k)}\right)$$
+		this distance is chosen in a way that doesn't interfere with other patterns. Each radial function should not interfere with other patterns.\\
+		
+		Having one hidden neuron for each training pattern means that the function is centered around that specific training pattern, the weights are set to the same values as the pattern, so the function will reach the maximum value for that particular training pattern (the distance will be zero); the function is centered around the specific training pattern. \\
+		
+		\newpage
+		
+		\paragraph{Initialization:} The connections from hidden to output neurons can be initialized by the formula
+		$$ \forall u: \, \sum_{k=1}^m w_{uv_m} out_{v_m}^{(l)} - \theta_u = o_u^{(l)} $$
+		
+		We can analytically solve the problem to find the values of these weights. We know the desired output, threshold and current output, so we know everything besides the \textbf{weights}, which can be \textbf{obtained} by \textbf{multiplying} the \textbf{interconnections weight} by the \textbf{matrix} $\bm{A}$ of the \textbf{hidden layer output}, considering $\theta = 0$:
+		$$ \bm{A} \cdot \vec{w}_u = \vec{o}_u $$
+		
+		Where $\vec{o}_u = \left(o_u^{(l_1)}, \, ... \, , o_u^{(l_m)}\right)^T$ is the vector of desired outputs, $\theta_u = 0$ and $\bm{A}$ is the $m \times m$ \textbf{matrix} that has for components the \textbf{various output of the neurons in the hidden layer}:
+		$$ \bm{A} = \left\{
+		\begin{array}{c c c c}
+			out_{v_1}^{(l_1)} & out_{v_2}^{(l_1)} & \dots & out_{v_m}^{(l_1)} \\
+			out_{v_1}^{(l_2)} & out_{v_2}^{(l_2)} & \dots & out_{v_m}^{(l_2)} \\
+			\vdots & \vdots & \vdots & \vdots \\
+			out_{v_1}^{(l_m)} & out_{v_2}^{(l_m)} & \dots & out_{v_m}^{(l_m)} \\
+		\end{array}
+		\right\}$$
+		
+		Each matrix row contains the outputs of the different neurons for one training example, each column contains the outputs of one hidden neuron for all training examples.\\
+		
+		Can be \textbf{solved by inverting} $\bm{A}$
+		$$ \vec{w}_u = \bm{A}^{-1} \vec{o}_u $$
+		
+		This method guarantees a \textbf{perfect approximation}. This means that is not necessary to train a simple radial basis function network. In general, if we don't want to have a neuron for each pattern, we'll have to select $k$ subsets from the dataset and find, for each subset, a representative that will be associated to a neuron in the hidden layer. \\
+		
+		\newpage
+		
+		\paragraph{General Radial Basis Functions:} Not the simple case, we can't have one neuron for each training sample. RBFN usually (always) possess \textbf{fewer neurons} in the hidden layer \textbf{than} there are \textbf{training examples}, otherwise it would not be feasible due to complexity and sometimes not even useful (what if the examples are clustered together?).\\
+		
+		We need to \textbf{select a subset} of $k$ \textbf{training patterns} as centers
+		\begin{itemize}
+			\item Connection \textbf{weights} for the \textbf{hidden neurons}: \textbf{training patterns} (the chosen ones)
+			\item Connection \textbf{weights} for \textbf{output neurons}:
+			$$ \bm{A} = \left\{
+			\begin{array}{c c c c c}
+				1 & out_{v_1}^{(l_1)} & out_{v_2}^{(l_1)} & \dots & out_{v_m}^{(l_1)} \\
+				1 & out_{v_1}^{(l_2)} & out_{v_2}^{(l_2)} & \dots & out_{v_m}^{(l_2)} \\
+				\vdots & \vdots & \vdots & \vdots & \vdots \\
+				1 & out_{v_1}^{(l_m)} & out_{v_2}^{(l_m)} & \dots & out_{v_m}^{(l_m)} \\
+			\end{array}
+			\right\}$$
+			Using the pseudo-inverse matrix since it's over-determined (it's not square, $m$ equations for each output neuron from the training examples but only $k+1$ weights from the $k$ neurons and the $1$ bias value, with $k < m$; more equations than unknowns, more training patterns than weights).
+		\end{itemize}
+		
+		How do we \textbf{choose the centers}? How we select the centers can influence the training
+		\begin{itemize}
+			\item \textbf{Random subsets:} select randomly, fast and only radius and output weights need to be determined, but the performance depends on the choice of data points (on which we have no control over)
+			\item \textbf{All data points:} like the simple RBFN, only radius and output weights need to be determined and output values can be achieved exactly, but computing the weights can become unfeasible 
+			\item \textbf{Clustering:} find the centers of the data with a dedicated algorithm, C-means clustering
+		\end{itemize}
+		
+		\newpage
+		
+		\paragraph{C-means clustering:} Used to find RBFN centers
+		\begin{enumerate}
+			\item Considering a \textbf{number of} $c$ \textbf{clusters} to be found (input)
+			
+			\item \textbf{Initialize} the cluster centers \textbf{randomly}
+			
+			\item \textbf{Assign} each \textbf{data point} (the examples) to the \textbf{closest cluster center} (or \textit{centroid})
+			
+			\item \textbf{Adjust} the \textbf{position} of the \textbf{center} considering the values of the assigned data points (mean vectors of the assigned data points, this is called cluster center update)
+			
+			\item \textbf{Repeat} the \textbf{step 3 and 4} until clusters do not move anymore (convergence).
+		\end{enumerate}
+		The idea is, get $c$ clusters, start with an approximate center and move it one step at a time, it will reach the actual center of the cluster, eventually.\\
+		
+		Example: with $c=3$ we choose random centers
+		\begin{center}
+			\includegraphics[width=0.65\columnwidth]{img/NN/clustering1}
+		\end{center}
+		Then we can use the \textbf{Delaunay Triangulation} of the centers (make triangles out of the centroids, left), which leads to the \textbf{Voronoi Diagram}, by taking the line orthogonal to each one of the three edges (right). This will result in a tessellation of the domain of the function, basically each tassel of the domain is a cluster.
+		\begin{center}
+			\includegraphics[width=0.65\columnwidth]{img/NN/clustering2}
+		\end{center}
+		
+		\newpage
+		
+		After that we can search for the new center of each cluster, where the sum of the distances is minimal, after finding it we can apply again the same partition (Delunay-Voronoi) as before and repeat the process with the new data points added by the new partition.
+		\begin{center}
+			\includegraphics[width=0.9\columnwidth]{img/NN/clustering3}
+		\end{center}
+		
+		We can add backpropagation, we can \textbf{train the network}; if we have fewer hidden neurons there are training examples the quality of the RBFN can usually be improved by training. Update rules are analogous to MLPs.\\
+		
+		We can update the weights from hidden to output neurons, the center coordinates (weights from input to hidden neurons) and the radii of the radial basis functions. We can do this by \textbf{following the backpropagation rules}, using the derivation of the output with respect to the variation of the weight.\\
+		
+		A \textbf{3 phases RBF} consists of:
+		\begin{itemize}
+			\item Phase 1: find output connection weights with inverse
+			\item Phase 2: find RBF centers (e.g. clustering)
+			\item Phase 3: error backpropagation
+		\end{itemize}
+		An RBFN with good initialization, clustering and backpropagation can obtain good performance.\\
+		
+		% End of L11
+		
+		\newpage
+		
+		\subsection{Learning Vector Quantization}
+		\textit{What if we don't know the output?} So far we've only considered fixed learning tasks (input/output pairs, supervised learning), which allowed us to describe training as error minimization. Now we'll be considering \textbf{free learning tasks} (unsupervised learning): the data consists \textbf{only} of \textbf{input values}/vectors. The \textbf{objective} is to \textbf{produce similar outputs for similar inputs} (clustering).\\
+		
+		The concept behind a lot of unsupervised approaches is \textbf{finding clusters} in a given set of data points. The algorithm will work towards finding the given number of clusters and represents them with their center (or a reference vector, same thing).\\
+		
+		We can still use the Delunay and Voronoi approach to find clusters. But we want to use \textbf{Learning Vector Quantization}, which is a way to \textbf{find a suitable quantization} (many-to-few mapping, often to a finite set) of the \textbf{input space} (e.g. tessellation of a Euclidean space), a way to \textbf{divide in cluster} the input space.\\
+		
+		Training \textbf{adapts} the \textbf{coordinates of reference} or \textbf{codebook vectors} (centers), each of which \textbf{defines a region in the input space}.\\
+		
+		Learning vector quantization \textbf{processes the data points one by one} and \textbf{adapts only one reference vector per data point}. The procedure is known as \textbf{competitive learning}: the training patterns (data points) are traversed one by one. For each training pattern, a "competition" is carried out, which is \textbf{won by the output neuron that yields the highest activation for this training pattern} (if distance and activation functions are the same for all output neurons, we may say equivalently: whose reference vector is closest to the training vector). Only this "winner neuron" is adapted. \\
+		
+		It's still a way to find the centers of the clusters in a way that makes inferring the class of the object possible. There is a learning process called competitive learning, we find the reference vector (center) closest to our input and its position will be updated before going to the next training pattern.
+		
+		\newpage
+		
+		\subsubsection{Learning Vector Quantization Networks}
+		A \textbf{Learning Vector Quantization Network} (LVQ/LVQN) is a \textbf{feed-forward 2-layered neural network}. It can be seen as RBF without the output layer, the hidden layer is used as output, the hidden layer outputs the corresponding activation for each of the neurons and that's the final output. For this reason "hidden" and "output" neurons will be used interchangeably.\\
+		
+		The \textbf{network input function} for each \textbf{output neuron} is a \textbf{distance function} of the \textbf{input vector and the weight vector}. The definition of the distance is the same. Each neuron in the hidden layer has its own radial function centered in a different place (it might be the same function, but each one has its own weight vector centering it in a different place) whose input is a distance from input to weight vector (since it acts as center of the function).\\
+		
+		The \textbf{output function} of \textbf{each output neuron} is not a simple function of the activation of the neuron, it \textbf{considers the activation of all output neurons}
+		$$ f_{out}^{(u)} (act_u) = \left\{
+		\begin{array}{c c}
+			1 & \text{ if } act_u = \max_{v \in U_{out}} act_v \\
+			0 & \text{ otherwise }
+		\end{array}
+		\right\}$$ 
+		It's \textbf{winner-takes-all}. \\
+		
+		Biggest activation will lead to a value of 1, 0 otherwise. We have one neuron winning over all the other, basically we have a connection between all neurons in the output layer such that each of them is able to see what the other neurons are doing (the activation), allowing the confrontation. All outputs will be 0, except one, which will be 1. If more than one unit has the maximal activation, one is selected at random, but if it happens we probably have chosen more cluster than needed.\\
+		
+		In the LVQN we can use the same radial functions that are use for any RBFN.
+		
+		\newpage
+		
+		\paragraph{Learning rules:} We want to learn the position of the reference vector (center of the radial function) of the cluster. For each training pattern we find the closest reference vector (winner neuron) and adapt only that one. Each reference vector is assigned to a class.\\
+		
+		To \textbf{adjust the weights} we can use (assuming supervised learning):
+		\begin{itemize}
+			\item \textbf{Attraction rule}, when data point and reference vector have the same class (output is of the correct class)
+			$$ \vec{r}^{(new)} = \vec{r}^{(old)} + \eta \left(\vec{x} - \vec{r}^{(old)}\right)$$
+			We move the reference vector closer to the input point.\\
+			
+			\item \textbf{Repulsion rule}, when data point and reference vector have different class (output is of the wrong class)
+			$$ \vec{r}^{(new)} = \vec{r}^{(old)} - \eta \left(\vec{x} - \vec{r}^{(old)}\right)$$
+			Complementary to the last one, the output is of the wrong class, the reference vector has to be moved further away.\\
+		\end{itemize}
+		
+		Where $x$ is the input, $r$ is the reference vector and $\eta$ is a learning rate ($0 < \eta < 1$).\\
+		
+		Representation of the idea:
+		\begin{center}
+			\includegraphics[width=0.9\columnwidth]{img/NN/LVQ1}
+		\end{center}
+		
+		\newpage
+		
+		The adaptation of reference vectors through some epochs (not many, there's still some training to do) can be seen here:
+		\begin{center}
+			\includegraphics[width=0.9\columnwidth]{img/NN/LVQ2}
+		\end{center}
+		Online training on the left, batch training on the right.\\
+		
+		We can see the random initialization of the reference vectors and the average movement (especially in batch training) goes towards the center of the clusters, the centers of the Gaussian functions get weighted towards the right values.\\
+		
+		\paragraph{Time dependent learning rate:} \textbf{Fixed learning rate} $\eta$ can \textbf{lead to oscillations}, the centers can move without never converging (left image, $\eta(t) = 0.5$). A solution for this can be \textbf{time dependent learning rate}, the parameter $\eta$ gets smaller with time (right image, $\eta(t) = 0.6 \cdot 0.85^t$, starting at $t=0$).
+		\begin{center}
+			\includegraphics[width=0.9\columnwidth]{img/NN/LVQ3}
+		\end{center}
+		This way instead of oscillating forever the value of the reference vector converges to the center.\\
+		
+		\newpage
+		
+		\paragraph{Update rule for classified data:} We can update not only the reference vector that is closest to the data point, but \textbf{update the two closest reference vectors}, provided that they are of two different classes. This enables to apply \textbf{attraction and repulsion rule} at the \textbf{same time}.\\
+		
+		It's a way to use the most significant training patterns to update the network more. If the two closest centers to a pattern are from different classes it means that the pattern is on the boundary of said classes, and thus meaningful. We move the correct class closer and the wrong one further away.\\
+		
+		\paragraph{Window Rule:} Standard learning vector quantization may \textbf{drive the reference vectors further and further apart}. The drawback of the repulsion rule is that it might push the centers far away. The \textbf{window rule} is a way to reduce this problem, the \textbf{update} happens \textbf{only if the data point $\vec{x}$ is close to the classification boundary}, the point must lie close to the (hyper-)surface that separates the regions in which different classes are predicted. The formula is:
+		
+		$$ \min\left(\frac{d(\vec{x}, \vec{r}_j)}{d(\vec{x}, \vec{r}_k)}, \frac{d(\vec{x}, \vec{r}_k}{d(\vec{x}, \vec{r}_j)}\right) > \theta \; \text{ where } \; \theta = \frac{1 - \xi}{1 + \xi} $$
+		
+		Where $\xi$ is a parameter specified by a user, and it describes the "width" of the window around the classification boundary. Note that $\vec{r}_j$ and $\vec{r}_k$ must be of two different classes.\\
+		
+		This rule prevents a divergence of the reference vectors because the \textbf{adaptation} caused by a data point \textbf{stops as soon as the classification border is far enough away}.\\
+		
+		\paragraph{Soft-Learning vector quantization:} Instead of the winner-takes-all approach, we can have a \textbf{soft assignment}, all the neurons will output \textit{something}, not zero, essentially giving a probability of being correct to each classification. The assumption is that the given data was samples from a mixture of normal distributions. The adaptation is done with the help of \textbf{gradient descent}, \textbf{maximizing} an objective function that describes the \textbf{probability} that a \textbf{data point is correctly classified}.
+		
+		% End of L12
+		
+		\newpage
+		
+		\subsection{Self-Organizing Maps}
+		\textbf{Self organizing maps} (SOM), sometimes also called \textbf{Kohonen feature map} (by the name of their inventor), are a feed forward neural network with 2 layers, similar to the Vector Quantization Learning networks, \textbf{with local connections only among neighboring hidden/output neurons}. We're organizing the centers of neighboring radial functions to be close to each other. An LVQ with centers organized in some way. \\
+		
+		The network \textbf{input function} of each input neuron is a \textbf{distance function} of \textbf{input} and \textbf{weight} vector. The \textbf{activation function} of each output neuron is a \textbf{radial function}. \\
+		
+		The output function of each output neuron is the identity, and the output is often discretized according to the winner-takes-all principle. \\
+		
+		On the \textbf{output neurons} a \textbf{neighborhood relationship is defined}. This means that the centers of the radial function are connected together, neighboring neurons will have centers which are close together. This leads to a (usually two-dimensional) \textbf{grid of neurons}. For example:
+		\begin{center}
+			\includegraphics[width=0.85\columnwidth]{img/NN/SOM1}
+		\end{center}
+		
+		The radial functions are placed in a two-dimensional space. Each neuron is connected to its nearest neighbor and has a region assigned to it. \\
 		
 		
 		
