@@ -1737,7 +1737,50 @@
 			\includegraphics[width=0.85\columnwidth]{img/NN/SOM1}
 		\end{center}
 		
-		The radial functions are placed in a two-dimensional space. Each neuron is connected to its nearest neighbor and has a region assigned to it. \\
+		The radial functions are placed in a two-dimensional space. Each neuron is connected to its nearest neighbor and has a region assigned to it. The \textbf{neighborhood relationship} of the output neurons is usually \textbf{defined} by \textbf{arranging these neurons into a} (usually two-dimensional) \textbf{grid}. \textbf{Reference vectors close to each other} in the input space belong to \textbf{neurons} that have a \textbf{small distance from each other}.\\
+		
+		\newpage
+		
+		\paragraph{Topology Preserving Mapping:} The SOM perform a \textbf{meaningful dimensionality reduction}, e.g. we have data in 3 dimensions, and we want to reduce it to 2 (just like the projection of the globe on a map). But we still want to \textbf{preserve the topology} (points near to each other on the globe will be close together on the map), although angles, distances and areas may be distorted. We're not inventing a new map, we're projecting something in a meaningful way, which approximately preserves the position of points.
+		
+		\begin{center}
+			\includegraphics[width=0.9\columnwidth]{img/NN/topology1}
+		\end{center}
+		
+		Images of \textbf{points close to each other} in the \textbf{original space} should be \textbf{close to each other} in the \textbf{image space}.\\
+		
+		With topology preserving maps we can \textbf{map high-dimensional structures} (input space) \textbf{onto low-dimensional spaces} (neuron space/grid).\\
+		
+		We need to adjust the training to incorporate to maintain the neighboring structure. This works only on \textbf{unsupervised learning/free-learning tasks}, the algorithm should be free to adjust the mapping and the classes by itself. In the training we need to respect the neighborhood, so we need to modify the attraction rule to consider the concept of neighborhood:
+		$$ \vec{r}_u^{(new)} = \vec{r}_u^{(old)} + \eta(t) \bm{f_{nb} \left(d_{neurons} (u, u_{\ast}), \varrho (t)\right)} (\vec{x} - \vec{r}_u^{(old)}) $$
+		Where: 
+		\begin{itemize}
+			\item $u_\ast$ is the \textbf{winner neuron} (reference vector closest to the data point)
+			\item the \textbf{neighborhood function} $f_{nb}$ is a \textbf{radial function}
+			\item \textbf{Learning rate} and \textbf{neighborhood radius} are \textbf{time-dependent}, they both decrease with time
+		\end{itemize}
+		More than one neuron is updated, and it's done in a way which considers the distance between the winner neuron and the one to be adapted. All output neurons in a certain radius will be updated, each with a certain strength (strength and distance defined by the neighborhood function).\\
+		
+		\newpage
+		
+		The \textbf{learning rate} will \textbf{decrease with time}, as seen before. The \textbf{neighborhood radius} does the same thing, at the start a bigger area around the winner neuron will be updated, as time goes on this area decreases.\\
+		This avoids oscillations and ensures convergence.\\
+		
+		\paragraph{Training:} The weight vector of the neuron in the self-organizing map is \textbf{initialized randomly}, the reference vector are placed randomly in the input/data space, using random training examples.\\
+		
+		The \textbf{training} itself \textbf{consists of}: 
+		\begin{itemize}
+			\item \textbf{Choosing} a \textbf{training sample}/data point
+			\item \textbf{Finding} the \textbf{winner neuron} with the distance function in the data space (neuron with the closest reference vector)
+			\item Computing the time dependent radius and learning rate and \textbf{adapt the corresponding neighbors} of the winner neuron
+		\end{itemize}
+		
+		\vfill
+		
+		Example MIA
+		
+		% End NN L13, L14 video is missing
+		
 		
 		
 		
