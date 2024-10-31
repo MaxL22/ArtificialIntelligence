@@ -1781,6 +1781,181 @@
 		
 		% End NN L13, L14 video is missing
 		
+		\newpage
+		
+		\subsection{Hopfield Networks}
+		The Hopfield Network (HN) is an ANN with a loop in the graph. It's the simplest type of \textbf{recurrent network}, a graph with direct cycles. \textbf{All} the \textbf{neurons} are \textbf{both input and output}. There is \textbf{no hidden layer} of neurons, each neuron is connected to another (except single neuron loops) and the connection weights are distributed symmetrically. \textbf{Each neuron} receives \textbf{input from all other neurons} while \textbf{not being connected to itself}.\\
+		
+		A \textbf{Hopfield network} is a \textbf{neural network} with a graph $G = (U, C)$ that satisfies the following conditions:
+		\begin{enumerate}
+			\item $U_{hidden} = \emptyset$, $U_{in} = U_{out} = U$,
+			\item $C = U \times U - \{(u, u) | u \in U \}$.
+		\end{enumerate}
+		
+		The \textbf{connection weights} are \textbf{symmetric} $\forall u, v \in U,$ $u \neq v: w_{uv} = w_{vu}$. The \textbf{network input function} of \textbf{each neuron} $u$ is the \textbf{weighted sum} of the \textbf{outputs of all other neurons}, that is
+		$$ \forall u \in U: f_{net}^{(u)} (\vec{w}_u, in_{u}) = \vec{w}_u in_u = \sum_{v \in U - \{u\}} w_{uv} out_v $$
+		
+		The \textbf{activation function} of each neuron $u$ is a \textbf{threshold function}
+		$$ \forall u \in U: f^{(u)}_{act} (net_u, \theta_u) =
+		\begin{cases}
+			1 & \text{ if } net_u \geq 0 \\
+			-1 & \text{ otherwise}
+		\end{cases}
+		$$
+		
+		The \textbf{output function} of each neuron is the \textbf{identity}, that is
+		$$ \forall u \in U: f_{out}^{(u)} (act_u) = act_u $$
+		
+		Since the connection weights are symmetric the \textbf{weight matrix} will obviously be \textbf{symmetric}. A Hopfield network with $n$ neurons $u_1, \, ... \, , u_n$ can be described by the $n \times n$ matrix
+		$$ 
+		W = \left(
+		\begin{array}{c c c c}
+			0 & w_{u_1u_2} & \dots & w_{u_1u_n}\\
+			w_{u_1u_2} & 0 & \dots & w_{u_2u_n} \\
+			\vdots & \vdots & & \vdots \\
+			w_{u_1u_n} & w_{u_2u_n} & \dots & 0 
+		\end{array}
+		\right)
+		$$
+		
+		\newpage
+		
+		\paragraph{Simple Examples:} A network that oscillates if the activations of the two neurons are updated in parallel, but reaches a stable state if the neurons are updated alternatingly
+		\begin{center}
+			\includegraphics[width=0.45\columnwidth]{img/NN/HN1}
+		\end{center}
+		The weight matrix is: 
+		$$ W = \left[
+		\begin{array}{c c}
+			0 & 1 \\
+			1 & 0
+		\end{array}
+		\right]
+		$$
+		There are no loops in a Hopfield network, that is, no neuron receives its own output as input. All feedback loops run through other neurons: a neuron $u$ receives the outputs of all other neurons as its input and all other neurons receive the output of the neuron $u$ as input. \\
+		
+		A three neuron example and its simplified representation (right):
+		\begin{center}
+			\includegraphics[width=0.8\columnwidth]{img/NN/HN2}
+		\end{center}
+		We don't need to explicitly draw input and output arrows since each neuron is both input and output. The weights are symmetric so a single arrow for both sides it's enough.\\
+		
+		\newpage
+		
+		In a network with cycles, such as a Hopfield network, the \textbf{behavior depends} also on the \textbf{update order}:
+		\begin{itemize}
+			\item \textbf{Synchronous update:} updating the values at the same time, in parallel. This way the computation can oscillate.\\
+			
+			\item \textbf{Sequential update:} updating the values asynchronously, one after the other. This always leads to convergence, which stable state is reached depends on which neuron is updated first.\\
+		\end{itemize}
+		
+		For the three neuron example, an asynchronous update leads either to the stable state $(1, 1, 1)$ or to the stable state $(-1, -1, -1)$. This can be seen with the \textbf{state graph}. \textbf{Each node} in the graph represents a \textbf{configuration for each neuron}. The $+/-$ \textbf{encodes} the \textbf{neuron activation} (active and inactive respectively)
+		\begin{center}
+			\includegraphics[width=0.6\columnwidth]{img/NN/HN3}
+		\end{center}
+		\textbf{Labels} on \textbf{arrows} indicate the \textbf{neurons}, whose \textbf{updates} (activation changes) lead to the corresponding state transitions. \\
+		States shown in \textbf{gray} are \textbf{stable}, cannot be left again. States shown in \textbf{white} are \textbf{unstable}, may be left again.\\
+		
+		\newpage
+		
+		\subsubsection{Convergence Theorem}
+		The convergence theorem states that, if the \textbf{activations of the neurons} of a Hopfield network are \textbf{updated sequentially} (asynchronously), then a \textbf{stable state is reached} in a \textbf{finite number of steps}.\\
+		If the \textbf{neurons} are \textbf{traversed} and updated \textbf{cyclically} in an \textbf{arbitrary}, but \textbf{fixed order}, at \textbf{most} $n \cdot 2n$ \textbf{steps} (updates of individual neurons) are needed for reach the convergence, where $n$ is the number of neurons of the HN.\\
+		
+		We can prove this by defining a function that maps every state of a Hopfield network to a real-valued number, which is reduced with every state transition or at least stays the same. This function is commonly called the \textbf{energy function} of the Hopfield network.\\
+		
+		So, the system can only evolve \textbf{from} one \textbf{state with higher energy} to \textbf{another with lower energy}. A \textbf{stable state} will be a \textbf{local minimum} of the energy function.\\
+		
+		If in a traversal of all $n$ neurons there are \textbf{no activation changes}: a \textbf{stable state} has been reached.\\
+		If in a traversal of all $n$ neurons \textbf{at least one activation changes}: the \textbf{previous state cannot be reached again} since updates can't go back to states with higher energy.\\
+		
+		\newpage
+		
+		\subsubsection{Associative Memory}
+		Hopfield networks are very well suited to implement so-called \textbf{associative memory}, that is, a kind of memory that is addressed by its contents. If a pattern is presented to an associative memory, the \textbf{memory returns} whether this \textbf{pattern coincides with one of the stored patterns}. This coincidence need not be exact, it may also return a stored pattern that is as similar as possible to the presented pattern, this way "noisy" patterns can be recognized.\\
+		
+		The associative memory works by \textbf{exploiting the stable states} of HN. If we determine the \textbf{weights and the thresholds} of a HN in such a way that the \textbf{patterns to store are exactly the stable states}, the normal update procedure of a Hopfield network finds for any input pattern a similar stored pattern.\\
+		
+		\textbf{Hebbian learning rule}:
+		\begin{enumerate}
+			\item Store one pattern $p$:
+			\begin{itemize}
+				\item find weights so that pattern is a stable state
+				\item $ W = pp^T - E $
+				\item $ w_{uv} = \begin{cases}
+					0 & u = v \\
+					1 & u \neq v, \; act_u^{(p)} = act_v^{(p)} \\
+					-1 & \text{ otherwise}
+				\end{cases}$
+			\end{itemize}
+			\nn
+			
+			\item Storing several patterns
+			\begin{itemize}
+				\item Computer $W_i$ for each pattern $p_i$
+				\item $W = \sum_i W_i$
+			\end{itemize}
+		\end{enumerate}
+		
+		\newpage
+		
+		\subsubsection{Solving Optimization Problems}
+		We can exploit a \textbf{minimization of the energy function} to \textbf{solve optimization problems}, since a Hopfield network reaches a (local) minimum of said function in every stable state.\\
+		
+		We need to:
+		\begin{itemize}
+			\item Transform \textbf{function to optimize} into a \textbf{function to minimize}.\\
+			
+			\item Transform \textbf{function} into the \textbf{form of an energy function} of a Hopfield network.\\
+			
+			\item \textbf{Read} the \textbf{weights and threshold} values \textbf{from} the \textbf{energy function}.\\
+			
+			\item \textbf{Construct} the corresponding Hopfield network.\\
+			
+			\item \textbf{Initialize Hopfield network randomly} and \textbf{update until convergence}.\\
+			
+			\item Read \textbf{solution} from the \textbf{stable state reached}.\\
+			
+			\item \textbf{Repeat} several times and \textbf{use best solution} found.\\
+			
+		\end{itemize}
+		
+		The solution found may not be the global optimum since it's just a local minimum.\\
+		
+		Also, the asynchronous updates limit the kind of changes that the HN can perform, since a change may violate a constraint and increase total energy but multiple changes together may result in a lower energy state.\\
+		
+		The procedure may get stuck in a local optima, similarly to what happens with many other optimization methods (e.g. gradient descent, hill climbing, alternating optimization).\\
+		
+		\newpage
+		
+		\subsubsection{Simulated Annealing}
+		This is a possible approach to solve the problems given by getting stuck in a local minimum of the energy function.\\
+		
+		The idea of simulated annealing is to \textbf{start} with a \textbf{randomly generated candidate solution} of the optimization problem and to \textbf{evaluate it}. In every later step, the current \textbf{candidate solution is modified} (slightly) and \textbf{re-evaluated}. \textbf{If} the \textbf{new solution is better} than the old, it is \textbf{accepted and replaces} the old solution. However, \textbf{if it is worse}, it is \textbf{accepted} only \textbf{with a certain probability} that depends on \textbf{how much worse} the new solution is. In addition, this \textbf{probability is reduced over time}. Furthermore, the best solution found so far is usually recorded in parallel.\\
+		
+		It's an \textbf{extension of gradient descent} that tries to \textbf{avoid getting stuck}, the transition from higher to lower local minimums should be more probable than the opposite.\\
+		
+		There is still \textit{no guarantee that the global optimum will be found}.\\
+		
+		\textbf{Algorithm} for a Hopfield network:
+		\begin{itemize}
+			\item All \textbf{neuron activations} are \textbf{initialized randomly}.\\
+			
+			\item The \textbf{neurons} of the Hopfield network are \textbf{traversed repeatedly} (for example, in some random order).\\
+			
+			\item For \textbf{each neuron}, it is determined whether an \textbf{activation change} leads to a \textbf{reduction} of the network energy or not.\\
+			
+			\item An \textbf{activation change that reduces} the network energy is \textbf{always accepted} (in the normal update process, only such changes occur).\\
+			
+			\item However, \textbf{if} an \textbf{activation change increases} the network \textbf{energy}, it is \textbf{accepted with a certain probability}.\\
+		\end{itemize}
+		
+		% End L14 (I think)
+		
+		
+		
+		
+		
 		
 		
 		
