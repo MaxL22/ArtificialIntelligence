@@ -1892,7 +1892,7 @@
 			
 			\item Storing several patterns
 			\begin{itemize}
-				\item Computer $W_i$ for each pattern $p_i$
+				\item Compute $W_i$ for each pattern $p_i$
 				\item $W = \sum_i W_i$
 			\end{itemize}
 		\end{enumerate}
@@ -1952,9 +1952,112 @@
 		
 		% End L14 (I think)
 		
+		\newpage
 		
+		\subsection{Boltzmann Machines}
+		An extension to the idea of Hopfield networks, instead of modeling a single pattern, \textbf{Boltzmann machines} want to \textbf{model a probability distribution}. The network is constructed with and wants to encode a probability distribution of the data over the whole input space, we want to understand how the data is structured and its significance. A standard Boltzmann machine differs from a Hopfield network mainly in how the states of the neurons are updated. \\
 		
+		It's possible to define an \textbf{energy function} that assigns a numeric \textbf{value} (an energy) \textbf{to each state} of the network (as seen in HN). With the help of this function a \textbf{probability distribution over the states} of the network is defined based on the \textbf{Boltzmann distribution}:
+		$$ P(\vec{s}) = \frac{1}{c} e^{-\frac{E(\vec{s})}{kT}} $$
+		Where: 
+		\begin{itemize}
+			\item $\vec{s}$ describes the (discrete) \textbf{state of the system}
+			\item $c$ is a normalization constant
+			\item $E$ is the function that yields the \textbf{energy of a state} $\vec{s}$
+			\item $T$ is the thermodynamic temperature of the system 
+			\item $k$ is Boltzmann's constant ($k \approx 1.38 \cdot 10^{-23} J/K$)
+		\end{itemize}
 		
+		The state of the machine $\vec{s}$ consists of the \textbf{vector} $\vec{act}$ of the \textbf{neuron activations}. The energy function of a Boltzmann machine 
+		$$ E(\vec{act}) = - \frac{1}{2} \vec{act}^\top W \vec{act} + \vec{\theta}^\top \vec{act} $$
+		where $W$ is the matrix of connection weights and $\vec{\theta}$ the vector of threshold values. The energy function depends on both the state (outputs) and configuration of the network.\\
+		
+		\newpage
+		
+		The \textbf{energy change} resulting from the \textbf{change of a single neuron} $u$:
+		$$ \Delta E_u = E_{act_u = 1} - E_{act_u = 0} = \sum_{v \in U - \{u\}} w_{uv} act_v - \theta_u = net_u - \theta_u $$
+		
+		The energy difference/change is closely \textbf{related} to the \textbf{network input}.\\
+		
+		The \textbf{probability} of a \textbf{neuron being active} is a \textbf{logistic function} of the (scaled) \textbf{energy difference} between its \textbf{active} and \textbf{inactive state}:
+		$$ P(act_u = 1) = \frac{1}{1 + e^{- \frac{\Delta E_u}{kT}}} $$
+		
+		\paragraph{Update procedure:} The update step is:
+		\begin{itemize}
+			\item A \textbf{neuron} $u$ is \textbf{chosen} (randomly)
+			\item The \textbf{energy difference} $\Delta E_u$ and then the \textbf{probability} of the neuron \textbf{having activation 1} are \textbf{computed}
+			\item The \textbf{neuron} is \textbf{set to activation 1} with this \textbf{probability} (and to 0 with the complement of said probability)
+		\end{itemize}
+		
+		This update is \textbf{repeated many times} for randomly chosen neurons. There is no update for weights or threshold, we're talking about an already trained Boltzmann machine.\\
+		
+		\textbf{Simulated annealing} is carried out by slowly lowering the temperature $T$. \\
+		
+		This is a \textbf{Markov-Chain Monte Carlo (MCMC)} procedure.\\
+		
+		After enough steps, the \textbf{probability} that the network is in a \textbf{specific activation state} depends only on the \textbf{energy of that state}, it's \textit{independent of the initial activation state} the process started with. This final situation is also referred to as \textbf{thermal equilibrium}.\\
+		
+		\newpage
+		
+		\subsubsection{Training}
+		The \textbf{probability distribution} represented by a Boltzmann machine via its energy function can be \textbf{adapted to a given sample of data points}.\\
+		
+		Boltzmann machine can represent a probability distribution \textbf{only if the points in the data set are compatible with a Boltzmann distribution}. In order to mitigate this restriction, the neurons of a Boltzmann machine are divided into \textbf{visible} neurons, which \textbf{receive the data points} as input, and \textbf{hidden} neurons, the \textbf{activations} of which are \textbf{not fixed by the data points} and thus allow for a more flexible adaptation to the sample data. This is the first deviation from the structure of Hopfield networks.\\
+		
+		The objective of the training is to \textbf{adapt weight and threshold values} in such a way that the true \textbf{distribution} underlying a given \textbf{data sample} is \textbf{approximated well} by the probability distribution represented by the Boltzmann machine on its visible neurons.\\
+		
+		The approach is to \textbf{measure the difference between two probability distributions} and use \textbf{gradient descent} to \textbf{minimize} said difference. Start from random values and, using gradient descent, minimize the difference between the distribution created and the data given.\\
+		
+		A commonly used measure of difference is the \textbf{Kullback-Leiber information divergence}
+		$$ KL(p_1, p_2) = \sum_{\omega \in \Omega} p_1 (\omega) \ln \frac{p_1(\omega)}{p_2 (\omega)} $$
+		Where $p_1$ refers to the data sample and $p_2$ refers to the visible neurons of the Boltzmann machine. It's a \textbf{measure of divergence} between \textbf{two probability distributions}, in our case it becomes like a loss function.\\
+		
+		\newpage
+		
+		\textbf{Each training step} there are \textbf{two phases}:
+		\begin{itemize}
+			\item \textbf{Positive phase}: the visible neurons are fixed to a data point chosen randomly, and the hidden neurons are updated until thermal equilibrium is reached.\\
+			
+			\item \textbf{Negative phase}: all units are updated until thermal equilibrium is reached
+		\end{itemize}
+		
+		\paragraph{Update rule:} The update is performed according to the following two equations
+		$$ \Delta w_{uv} = \frac{1}{\eta} \left(p_{uv}^+ - p_{uv}^-\right) \;\; \text{ and } \;\; \Delta \theta_u = - \frac{1}{\eta} \left(p_u^+ - p_u^-\right) $$
+		Where $p_u$ indicates the probability that neuron $u$ is active, $p_{uv}$ indicates the probability that neurons $u$ and $v$ are both active simultaneously and the $+, -$ as upper indices indicate the phase referred to (positive and negative respectively).\\
+		
+		All these probabilities are \textbf{estimated} from the \textbf{relative frequency} with which the \textbf{corresponding situation was observed in the respective phase}.\\
+		
+		Intuitively: if a \textbf{neuron} is \textbf{more often active when a training example is presented} (i.e., visible units are fixed) than when the network is allowed to run freely (i.e., visible units are updated), the \textbf{probability of the neuron being active is too low}, so the threshold should be reduced.\\
+		Similarly, if \textbf{two neurons are more often active together} when a \textbf{training example is presented} than when the network is allowed to run freely, the \textbf{connection weight between them should be increased}, so that they become more likely to be active together. \\
+		
+		This training procedure is \textbf{impractical unless the networks are very small}. The larger the network the more update steps are needed to obtain sufficiently reliable statistics for the neuron activation used in the update formulas. The complexity grows too quickly with the number of neurons.\\
+		
+		\newpage
+		
+		\subsubsection{Restricted Boltzmann Machines}
+		It's a solution to \textbf{limit complexity} with respect to the number of neurons and allow for \textbf{efficient training}.\\
+		
+		In a Restricted Boltzmann machine (RBM) we have a \textbf{bipartite graph} instead of a fully connected one. The connections only go from neurons in the visible layer to neurons in the hidden layer (no connections among the same group).
+		
+		\begin{center}
+			\includegraphics[width=0.65\linewidth]{img/NN/RBM1}
+		\end{center}
+		
+		In an RBM \textbf{all input neurons are also output neurons} and vice versa. There are hidden neurons, which are different from input and output neurons. Each input/output neuron receives input from all hidden neurons and vice versa.\\
+		
+		Due to the \textbf{lack of connections} within visible and hidden units \textbf{training} can proceed by \textbf{repeating three steps}: 
+		\begin{itemize}
+			\item \textbf{First step}: \textbf{visible units are fixed} to a randomly chosen data sample $\vec{x}$ and \textbf{hidden units are updated} one and in parallel $\vec{y}$, retrieving the \textbf{positive gradient} for the weight matrix $xy^T$.\\
+			
+			\item \textbf{Second step}: \textbf{hidden neurons are fixed} to the vector $\vec{y}$, \textbf{visible units are updated} one and in parallel to the "reconstruction" $\vec{x}^\ast$. Then \textbf{hidden neurons are updated once more}, $\vec{y}^\ast$, and the \textbf{negative gradient} is obtained $\vec{x}^\ast \vec{y}^{\ast T}$.\\
+			
+			\item \textbf{Third step}: \textbf{connection weights are updated} with the difference of positive and negative gradient
+			$$ \Delta w_{uv} = \eta \left( \vec{x}_u \vec{y}_u^T - \vec{x}^\ast_u \vec{y}^{\ast T}_u \right)$$
+		\end{itemize}
+		
+		The RBM have also been used to build deep networks similar to stacked autoencoders for the MLP.\\
+		
+		%End NN L15
 		
 		
 		
