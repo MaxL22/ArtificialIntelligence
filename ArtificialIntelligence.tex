@@ -2059,7 +2059,55 @@
 		
 		%End NN L15
 		
+		\subsection{Recurrent Networks}
+		Recurrent networks (RNN) are NN with fewer limitations than the ones seen until now, we want to remove limitations such as no loops on the same neuron, no cycles, only allowing connections between different layers, ecc. We're \textbf{lifting all restrictions}, such as the ones seen for Hopfield networks and Boltzmann machines, and considering \textbf{recurrent networks without any constraints}.\\
 		
+		The \textbf{output} is generated when \textbf{stability is reached}.\\
+		
+		The \textbf{configuration} can be
+		\begin{itemize}
+			\item \textbf{by construction} if the structure of the computation is known
+			\item \textbf{by extending the error backpropagation algorithm in time} to deal with recursion to output stability for each input pattern
+		\end{itemize}
+			
+		RNN can be used to represent differential equations: 
+		$$ x^{(n)} = f(t, x, x', x'', \, \dots \, , x^{(n-1)}) $$
+		which is equivalent to a system of differential equations
+		$$ 
+		\begin{cases}
+			x' = y_1 \\
+			y_1' = y_2 \\
+			\dots \\
+			y_{n-1}' = y_{n-1}\\
+			y_{n-1}' = f(t, x, y_1, y_2, \, ... \, , y_{n-1})
+		\end{cases}
+		$$
+		And the recursive representation
+		\begin{flalign*}
+			x(t_i) = & \; x(t_{i-1}) + \Delta t y_1(t_{i-1}) \\
+			y_1 (t_i) = & \; y_1 (t_{i-1}) + \Delta t y_2 (t_{i-1}) \\
+			\dots & \\
+			y_{i-2} (t_i) = & \; y_{i-2} (t_{i-1}) + \Delta t y_{i-3} (t_{i-1}) \\
+			y_{i-1} (t_i) = & \; y_{i-1} (t_{i-1}) + f(t_{i-1}, x(t_{i-1}), y_1 (t_{i-1}), \, \dots \, , y_{n-1} (t_{i-1}))
+		\end{flalign*}
+		We can represent differential equation using RNN (or vice versa).\\
+		
+		\newpage
+		
+		\begin{center}
+			\includegraphics[width=0.4\columnwidth]{img/NN/RN1}
+		\end{center}
+		The output of the network can be reconstructed by \textbf{considering the output in the previous instant} of time. We can use the derivative of the function at the previous time slice for computing the following value. This allows to transform the equation into an RNN, creating for each variable a node inside the graph and associating to the connections the value of the differential (like in the image).\\
+		
+		\paragraph{Vectorial Neural Networks:} Recurrent networks can be composed by \textbf{multiple recurrent sub-networks}. It can be used to compute vectorial differential equations (systems with more than one function).
+		
+		\paragraph{Error backpropagation in time:}  The backpropagation is not directly applicable since \textbf{loops propagate errors in a cyclic manner}. Recurrent networks must be \textbf{unfolded in time} between two training patterns, replicating the structure of the network so that it "simulates an MLP", the loops must be unfolded in a linear/spatial way. We put all neurons in each time slice one after the other and compute the average update (since they're the same connection). The \textbf{backpropagation} is \textbf{computed on the unfolded network} and the \textbf{adjustments of the same weight} are \textbf{combined} to generate the value for the RNN.\\
+		
+		\newpage
+		
+		%End NN L16
+		
+		%End of NN (finalmente)
 		
 		
 	\end{document}
