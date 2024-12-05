@@ -735,3 +735,244 @@ Reconstructing a relation from its projections.\\
 
 % End L2.1 FS
 
+\subsection{Binary Fuzzy Relations}
+
+Binary relations are significant since they are \textbf{generalized mathematical functions}. A relation $R(X,Y)$ may assign to each element of $X$ \textbf{two or more elements of} $Y$, which a function would not be able to do.\\
+
+\paragraph{Domain:} Given a fuzzy binary relation $R(X,Y)$ its \textbf{domain} $\dom R$ is the fuzzy set on $X$ whose membership function is \textbf{defined for each} $x \in X$ \textbf{as}:
+$$ \dom R (x) = \max_{y \in Y} \{R(X,Y)\} $$
+
+i.e., each $x \in X$ belongs to the domain of $R$ to a degree equal to the strength of its strongest relation to any $y \in Y$ (fix $x$, vary $y$, take the maximum).\\
+
+\paragraph{Range:} The \textbf{range} $\ran$ of $R(X,Y)$ is a fuzzy binary relation on $Y$ whose membership function is \textbf{defined for each} $y \in Y$ \textbf{as} 
+$$ \ran R(y) = \max_{x \in x} \{R(x,y)\} $$
+
+i.e., the strength of the strongest relation which each $y \in Y$ has to an $x \in X$ equals to the degree of membership of $y$ in the range of $R$ (fix $y$, vary $x$, take the maximum).\\
+
+\paragraph{Height:} The \textbf{height} $h$ of $R(X,Y)$ is a \textbf{number defined by} 
+$$ h(R) = \max_{y \in Y} \max_{x \in X} \{R(x,y)\}$$
+
+i.e., the largest membership grade obtained by any pair $(x,y) \in R$.\\
+
+\newpage
+
+\paragraph{Representation and Inverse:} Considering e.g., the membership matrix 
+$$ R = [r_{xy}] \; \text{ with } \; r_{xy} = R(X,Y) $$
+
+Its \textbf{inverse} $R^{-1}(y,x) = R(x,y)$ of $R(X,Y)$ is a \textbf{relation on} $Y \times X$ \textbf{defined by}
+$$ R^{-1} (y,x) = R(x,y), \;\;\;\; \forall x \in X, \forall y \in Y $$
+
+And $[r_{xy}^{-1}]$ representing $R^{-1} (y,x)$ is the \textbf{transpose} of $R$ for $R(X,Y)$.\\
+
+\paragraph{Standard Composition:} Consider the relations $P(X,Y)$, $Q(Y,Z)$ with \textit{common set} $Y$. The \textbf{standard composition} of $P$ and $Q$ is defined as
+$$ (x,z) \in P \cdot Q \Leftrightarrow \exists y \in Y : \{(x,y) \in P \wedge (y,z) \in Q \} $$
+
+In the \textbf{fuzzy case this is generalized by} 
+$$ [P \cdot Q](x,z) = \sup_{y \in Y} \{\min \{P(x,y), Q(y,z), \forall x \in X, \forall z \in Z \} $$
+
+If $Y$ is finite, $\sup$ is replaced by $\max$, also called $\max$-$\min$ composition. \\
+Basically extension principle, the $\wedge$ becomes a $\min$, takes the greatest of the minimums.\\
+
+\paragraph{Inverse of Standard Composition:} Follows from its definition
+$$ [P(X,Y) \cdot Q(Y,Z)]^{-1} = Q^{-1} (Z,Y) \cdot P^{-1} (Y, X) $$
+
+Also, \textbf{associativity}: 
+$$ [P(X,Y) \cdot Q(Y,Z)] \cdot R (Z,W) = P(X,Y) \cdot [Q(Y,Z) \cdot R(Z,W)] $$
+
+Note that \textbf{it's not commutative}.\\
+
+\paragraph{Relational Join:} While composition returns pairs, the \textbf{relational join yields triples}. For $P(X,Y)$ and $Q(Y,Z)$ is \textbf{defined by }
+$$ [P \ast Q] (x,y,z) = \min\{ P(x,y), Q(y,z)\}, \;\;\; \forall x \in X, \forall y \in Y, \forall z \in Z $$
+
+\newpage
+
+\subsubsection{Binary Relations on a Single Set}
+
+It's possible to define crisp or fuzzy binary \textbf{relations among elements of a single set} $X$, denoted as $R(X,X)$ or $R(X^2)$, which is a subset of $X \times X = X^2$.\\
+
+These relations are also referred as \textbf{directed graphs}, which is a possible representation: 
+\begin{itemize}
+	\item Each element of $X$ is a node
+	\item Directed connection between nodes indicate pairs of $x \in X$ for which the grade of the membership is nonzero 
+	\item Each connection is labeled by its actual membership grade of the corresponding pair in $R$
+\end{itemize}
+
+\paragraph{Properties:} A crisp relation $R(X,X)$ is called 
+\begin{itemize}
+	\item \textbf{Reflexive} iff $\forall x \in X: (x,x) \in R$
+	\item \textbf{Symmetric} iff $\forall x, y \in X: (x,y) \in R \leftrightarrow (y,x) \in R$
+	\item \textbf{Transitive} iff $(x,z) \in R$ whenever both $(x,y) \in R$ and $(y,z) \in R$ for at least one $y \in X$
+\end{itemize}
+All these properties are \textit{preserved under inversion of the relation}.\\
+
+These properties can be \textbf{extended to fuzzy relations}, by defining them in terms of the membership function of the relation. So a fuzzy relation $R(X,X)$ is called: 
+\begin{itemize}
+	\item \textbf{Reflexive} iff $\forall x \in X: R(x,x) = 1$
+	\item \textbf{Symmetric} iff $\forall x,y \in X: R(x,y) = R(y,x)$
+	\item \textbf{Transitive} iff it satisfies
+	$$ R(x,z) \leq \max_{y \in Y} \min \{R(x,y), R(y,z)\}, \;\;\; \forall (x,z) \in X^2 $$
+\end{itemize}
+
+A fuzzy binary relation that is both reflexive, symmetric and transitive is called a \textbf{fuzzy equivalence relation}.\\
+
+\newpage
+
+\subsection{Fuzzy Control}
+
+It's a special kind of \textbf{non-linear table-based} control method. The non-linear \textbf{transition function} can be \textbf{defined without specifying every entry} of the table individually. It has the goal of specifying a certain behavior.\\
+
+\subsubsection{Table-Based Control}
+Control systems all share a time-dependent \textbf{output variable} (e.g., if I have to control an engine, \textit{RPMs}).\\
+Output is controlled by a \textbf{control variable} (e.g., \textit{current going to the engine}).\\
+Also, \textbf{disturbance variables} can influence output (e.g., \textit{load of the machine}).\\
+
+The \textbf{computation of the actual value} incorporates: 
+\begin{itemize}
+	\item Control variable
+	\item Measurements of the current output variable $\xi$
+	\item Change of output variable $\Delta \xi = d\xi / dt$
+\end{itemize}
+
+If $\xi$ is given in \textbf{finite time intervals}, then set 
+$$ \Delta \xi (t_{n+1}) = \xi (t_{n-1}) - \xi (t_n) $$
+
+\paragraph{Notation:}
+\begin{itemize}
+	\item Input variables $\xi_1, \, \dots \, , \xi_n$
+	\item Control variable $\eta$
+	\item Measurements used to determine actual value of $\eta$
+	\item Assumption: $\xi_i$, $1 \leq i \leq n$ is value of $X_i, \eta \in Y$
+\end{itemize}
+
+Solution: \textbf{Control function} $\varphi$:
+$$ \varphi: X_1 \times \, \dots \, \times X_n \rightarrow Y $$
+$$ (x_1, \, \dots \, , x_n) \mapsto y $$
+
+\newpage
+
+\subsubsection{Fuzzy approach to Control}
+
+\paragraph{Problem of Classical approach:} It is often \textbf{very difficult} or even impossible to \textbf{specify an accurate mathematical model}. Description with differential equations is very complex, profound physical knowledge is needed, finding an exact solution can be very difficult.
+
+It should be possible to \textbf{control a process without} a physical-mathematical model. E.g., we know how to ride a bike without knowing about differential equations.\\
+
+\paragraph{Fuzzy Approach:} The \textbf{fuzzy approach} wants to \textbf{simulate the behavior of a human} who knows how to control. That is a \textbf{knowledge-based analysis}. Directly ask an expert to perform analysis, specifying \textbf{linguistic rules}. \\
+
+\paragraph{Fuzzy Partitioning:} We want to define a fuzzy controller, we need to \textbf{formulate a set of linguistic rules}: 
+\begin{itemize}
+	\item Determine \textbf{linguistic terms} (represented by fuzzy sets) $X_1, \, \dots \, , X_n$ and $Y$ is \textbf{partitioned into fuzzy sets} (divide input and output variables in two fuzzy sets).\\
+	
+	\item Define $p_1$ \textbf{distinct fuzzy sets} $\mu_1^{(1)}, \, \dots \, , \mu_{p_1}^{(1)} \in \mathcal{F}(X_1)$ \textbf{on set} $X_1$ (each set has its own membership function).\\
+	
+	\item Associate \textbf{linguistic term with each set}.\\
+	
+	\item Let $X_1$ correspond to the \textbf{interval} $[a,b]$ of real axis, then $\mu_1^{(1)}, \, \dots \, , \mu_{p_1}^{(1)} \in \mathcal{F} (X_1)$ are \textbf{triangular functions}
+	$$ \mu_{x_{0, \epsilon}}: [a,b] \rightarrow [0,1] $$
+	$$ x \mapsto 1 - \min {\epsilon \cdot |x - x_0|, 1} $$
+	If $a < x_1 < \, \dots \, < x_{p_1} < b$, only $\mu_2^{(1)}, \, \dots \, , \mu_{p_1 - 1}^{(1)}$ are triangular. Boundaries are treated differently.\\
+\end{itemize}
+
+\newpage
+
+\subsubsection{Fuzzy Relation}
+
+How do we \textbf{define the function} $\varphi: X \rightarrow Y$ that fits to rule set? We need to specify the function that fits all rules, so we can be able to extend it without specifying all entries.\\
+
+The idea is to \textbf{represent} the \textbf{set of rules} as a \textbf{fuzzy relation}. We then can specify the desired table-based controller as a fuzzy relation.\\
+
+Considering only crisp sets, solving a control problem means \textbf{specifying the control function}: 
+$$ \varphi : X \rightarrow Y $$
+
+$\varphi$ corresponds to \textbf{relation}:
+$$ R_{\varphi} = \{(x, \varphi(x)) | x \in X \} \subseteq X \times Y $$
+
+For measured input $x \in X$, control value: 
+$$ \{\varphi(x)\} = \{x\} \cdot R_{\varphi} $$
+
+\nn
+
+\paragraph{Fuzzy control rules:} We can specify a controller with very simple rules:
+\begin{center}
+	\textbf{If} temperature is very high \textbf{and} pressure is slightly low, \\
+	\textbf{then} heat change should be slightly negative
+\end{center}
+
+\newpage
+
+\subsubsection{Architecture of a Fuzzy Controller}
+
+The architecture of a fuzzy controller is something like: 
+\begin{center}
+	\includegraphics[width=0.7\columnwidth]{img/FS/fuzzycontroller}
+\end{center}
+
+On \textbf{top}, we have the \textbf{fuzzy part}, containing all the fuzzy logic, while on the \textbf{bottom} we have the \textbf{non-fuzzy part}, like the temperature, which is a measured value. Obviously, something like a thermostat can't accept fuzzy values, so we have to defuzzify.\\
+
+\textbf{Components}:
+\begin{itemize}
+	\item \textbf{Fuzzification interface:} receives the current input value (eventually maps to a suitable domain), converts it into linguistic terms or into fuzzy set.\\
+	
+	\item \textbf{Knowledge base:} consists of \textit{data base} and \textit{rule base}, the \textbf{data base} contains information about boundaries, possible domain transformations and fuzzy sets with corresponding linguistic terms, while the \textbf{rule base} contains linguistic control rules.\\
+	
+	\item \textbf{Decision logic:} represents the processing unit, it computes output from the measured input, according to the knowledge base. Application of the fuzzy relation.\\
+	
+	\item \textbf{Defuzzification interface:} determines the crisp output value (and eventually maps it back to the appropriate domain).\\
+\end{itemize}
+
+The knowledge base and decision logic need human intervention, it needs to be specified what to do.
+
+\newpage
+
+\subsubsection{Approximate Reasoning with Fuzzy rules}
+
+Given $r$ \textbf{if-then rules} and the fact "$X$ is $M$", we can conclude that "$Y$ is $N$". This kind of \textbf{reasoning} is typically used in \textbf{fuzzy controllers}. \\
+
+The \textbf{general schema} is:
+\begin{center}
+	\begin{tabular}{c c}
+		Rule 1 & if $X$ is $M_1$, then $Y$ is $N_1$ \\
+		Rule 2 & if $X$ is $M_2$, then $Y$ is $N_2$ \\
+		\dots & \dots \\
+		Rule $r$ & if $X$ is $M_r$, then $Y$ is $N_r$ \\
+		Fact: & $X$ is $M'$ \\
+		\hline & \\
+		Conclusion: & $Y$ is $N'$
+	\end{tabular}
+\end{center}
+
+\paragraph{Disjunctive imprecise rules:} For something like:
+\begin{itemize}[label*=]
+	\item \textbf{if} $X = [3,4]$, \textbf{then} $Y = [5,6]$
+\end{itemize}
+the \textbf{interpretation} can be
+\begin{itemize}[label*=]
+	\item values coming from $[3,4] \times [5,6]$, all values between 3 and 4 will be between 5 and 6
+\end{itemize}
+
+There can be \textbf{more than one}: 
+\begin{itemize}
+	\item if $X = M_1$, then $Y=N_1$
+	\item if $X = M_2$, then $Y=N_2$
+	\item if $X = M_3$, then $Y=N_3$
+\end{itemize}
+Rule 1 as well as rule 2 as well as rule 3 hold true. The total space is
+$$ S = \bigcup_{i=1}^r M_i \times N_1 $$
+
+This can be extended to fuzzy rules by using \textbf{fuzzy membership} instead of a range of values, creating \textbf{fuzzy relations}. The combination becomes the union of all the rules.\\
+
+\newpage
+
+\paragraph{Conjunctive rules:} So far, we've defined relationships by using the disjunction (or) of the rules, if-then rules are treated as disjuncted. Our rule set $R$ is the union of each $R_i$.\\
+
+The rules can also be \textbf{treated as a conjunction}, by taking the intersection of the different relations:
+$$ R = \bigcap_{1 \leq i \leq r} R_i $$
+
+The decision depend on the intended use and how the $R_i$ are obtained.\\
+
+The possible outputs are then defined as the inputs still possible while respecting all the rules, it's easier to see as defining which resulting values are \textit{impossible} and considering the rest.\\
+
+% End L2.2 FS, gh 114
+
+
+
+
