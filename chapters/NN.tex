@@ -1159,7 +1159,7 @@ If you initialize the \textbf{learning rate} $\eta$ with too high of a value, in
 
 A \textbf{solution} to the problem could consist in \textbf{repeating the learning}, initializing the system with a different configuration of weights and threshold, and then choose at the end which configuration results in the better minimum.\\
 
-On the contrary, a value too small for $\eta$ makes the learning too long and takes too many steps. The correct value has to be chosen through trial and error (mostly by vibe I guess).\\
+On the contrary, a value too small for $\eta$ makes the learning too long and takes too many steps. The correct value has to be chosen through trial and error (mostly by vibes I guess).\\
 
 %\newpage
 
@@ -1179,7 +1179,7 @@ From a numeric point of view, the error \textbf{can't completely vanish due to t
 \subsubsection{Variants of Gradient Descent}
 There can be \textbf{variants} of the gradient descent: 
 \begin{itemize}
-	\item \textit{Manhattan training}, considers only the sign of the gradient, fast but might not reach the optimum
+	\item \textit{Manhattan training}, considers only the sign of the gradient, fast but might not reach the optimum.\\
 	\item \textit{Flat spot elimination}, the derivative of the action function is lifted by a certain value $\alpha$ so that sufficiently large training steps are taken even in flat spot regions.\\
 	\item \textit{Momentum term}, at each step a fraction of the preceding weight change is added to a normal gradient descent step.\\
 	\item \textit{Self-adaptive error backpropagation}, each parameter has a different learning rate, allowing a finer control of the learning process.\\
@@ -1663,7 +1663,7 @@ It's a way to use the most significant training patterns to update the network m
 
 \paragraph{Window Rule:} Standard learning vector quantization may \textbf{drive the reference vectors further and further apart}. The drawback of the repulsion rule is that it might push the centers far away. The \textbf{window rule} is a way to reduce this problem, the \textbf{update} happens \textbf{only if the data point $\vec{x}$ is close to the classification boundary}, the point must lie close to the (hyper-)surface that separates the regions in which different classes are predicted. The formula is:
 
-$$ \min\left(\frac{d(\vec{x}, \vec{r}_j)}{d(\vec{x}, \vec{r}_k)}, \frac{d(\vec{x}, \vec{r}_k}{d(\vec{x}, \vec{r}_j)}\right) > \theta \; \text{ where } \; \theta = \frac{1 - \xi}{1 + \xi} $$
+$$ \min\left(\frac{d(\vec{x}, \vec{r}_j)}{d(\vec{x}, \vec{r}_k)}, \frac{d(\vec{x}, \vec{r}_k)}{d(\vec{x}, \vec{r}_j)}\right) > \theta \; \text{ where } \; \theta = \frac{1 - \xi}{1 + \xi} $$
 
 Where $\xi$ is a parameter specified by a user, and it describes the "width" of the window around the classification boundary. Note that $\vec{r}_j$ and $\vec{r}_k$ must be of two different classes.\\
 
@@ -1701,7 +1701,7 @@ Images of \textbf{points close to each other} in the \textbf{original space} sho
 
 With topology preserving maps we can \textbf{map high-dimensional structures} (input space) \textbf{onto low-dimensional spaces} (neuron space/grid).\\
 
-We need to adjust the training to incorporate to maintain the neighboring structure. This works only on \textbf{unsupervised learning/free-learning tasks}, the algorithm should be free to adjust the mapping and the classes by itself. In the training we need to respect the neighborhood, so we need to modify the attraction rule to consider the concept of neighborhood:
+We need to adjust the training to incorporate maintaining the neighboring structure. This works only on \textbf{unsupervised learning/free-learning tasks}, the algorithm should be free to adjust the mapping and the classes by itself. In the training we need to respect the neighborhood, so we need to modify the attraction rule to consider the concept of neighborhood:
 $$ \vec{r}_u^{(new)} = \vec{r}_u^{(old)} + \eta(t) \bm{f_{nb} \left(d_{neurons} (u, u_{\ast}), \varrho (t)\right)} (\vec{x} - \vec{r}_u^{(old)}) $$
 Where: 
 \begin{itemize}
