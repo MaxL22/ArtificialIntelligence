@@ -46,10 +46,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Domande sulla prima parte:
 %	MLP
-%	CNN
-%	SOM
 %	RBFN
 %	LVQN
+%	SOM
 %	Hopfield
 %	Boltzmann machines
 %	Recurrent
@@ -82,8 +81,6 @@
 	
 	\section{Neural Networks}
 	
-	% Punti:
-	% training, Deep Learning
 	\subsection{Multi Layer Perceptrons MLP}
 	
 	\subsubsection{Definition}
@@ -166,5 +163,64 @@
 	The error can’t completely vanish due to the properties of the logistic function, there will always be some residual errors due to the computation of the various parameters.\\
 	
 	\subsubsection{Deep Learning}
+	The term "Deep Learning" refers to a NN with several hidden layers. With "depth" we mean the number of layers that separate input and output. \\
+	Approximating a function with only three layers might require a large (even exponential) number of neurons, while more hidden layers allow for the same approximation with less neurons. Increasing the number of hidden layers decreases complexity. Having less neurons also allows to use smaller data sets.\\
+	
+	The main problems with Deep Learning are: 
+	\begin{itemize}
+		\item Overfitting: we're increasing the quantity of adaptable parameters, and thus capabilities, it might lead to overfitting. Some solutions are: weight decay (avoiding large values for the weights), sparsity constraints, dropout training; 
+		\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layers, usually as a series of stacked autoencoders: 3-layer perceptrons that maps its inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
+	\end{itemize}
+	
+	\subsubsection{Convolutional Neural Networks}
+	Still inside the field of deep learning, but the "receptive field" of each neuron is reduced, i.e., each neuron is connected only to a partial region of the input data (preceding layer, we're removing the fully connected constraint). This allows for very deep networks, with a reduced number of connections. The "convolutional" comes from all neurons in the same layer sharing the same weight, like convolution (kinda like sliding a window over an image).\\
+	Neurons in the layer after the convolution apply maximum pooling, keeping only the maximum activation of the neurons for each sampled region, maintaining the obtained results but losing knowledge of their location in the original input. This allows to extract features and remove noise. \\
+	Further layers allow for more high-level features, building a hierarchy over multiple stages.\\
+	
+	\subsection{Radial Basis Function Networks RBFN}
+	
+	\subsubsection{Definition}
+	RBFNs are a feed-forward (the data flows only in one direction, forward, no cycles) neural networks with always three layers. Each previous layer is fully connected to the subsequent.\\
+	In the hidden layer radial basis functions are employed as activation functions. A RBF is a function that peaks at zero and decreases in all other directions.\\
+	
+	From hidden to output neurons the activation function is the "classical" weighted sum of all inputs. The activation function of the output neurons is linear and propagates to the output.\\ 
+	
+	The input function of each hidden neuron is a distance function (there can be different types) between input and weight vectors. Each hidden neuron receives as input a distance. The activation function is a radial function, which decreases monotonically. The catchment region, defined by the reference radius $\sigma$, defines the shape and width of the function, i.e., the function is 1 at 0, decreases in some way until $\sigma$. Each neuron can have its own function.\\ 
+	Since the function is activated based on distance, this draws a circle (or equivalent for a certain definition of distance) in the feature space, where the data considered is located.\\
+	
+	\subsubsection{Function Approximation}
+	RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, alternatively, obtaining the same approximation with less neurons.\\
+	
+	Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the function that define the RBFN. Using rectangular functions give the same approximation as an MLP, while triangular or gaussian function allow smoother transitions between steps.\\
+	
+	\subsubsection{Training}
+	Considering a case of supervised learning with a "simple RBFN", where each training example is covered by its own RBF, i.e., a neuron for each training example. \\
+	In this case the weights to the hidden neurons are initialized with the value of the respective training example. \\
+	The radii of the activation functions can be chosen heuristically in such a way that each function doesn't interfere with other patterns. We center each radial function around a specific pattern.\\
+	We then can find analytically find the value of the weights from hidden to output neurons, it's the vector of desired outputs multiplied by the inverse of the matrix containing the hidden layer outputs.\\
+	This method guarantees perfect approximation, it's not necessary to train a simple RBFN.\\
+	
+	General Radial Basis Function Networks possess fewer neurons than training examples, we need to select a subset of the training patterns as centers, which will become the input weights for the hidden neurons, then we find the weights for the output layer as before, with an over-determined matrix.\\
+	
+	We need to find "good" centers, since they influence the training, they become what the radial function is based on. A way to find the centers is C-means Clustering: considering  a number $c$ of clusters to be found
+	\begin{enumerate}
+		\item Initialize the cluster centers randomly
+		\item Assign each training data point to the closest cluster center
+		\item Recalculate the centers from the new data points assigned 
+		\item Repeat the last two steps until convergence
+	\end{enumerate}
+	
+	Then we can add backpropagation to train the network since it will not be perfectly accurate, following standard backpropagation rules. \\
+	
+	A 3-phases RBF training consists of: 
+	\begin{itemize}
+		\item Find output connection weights with inverse
+		\item Find RBF centers (clustering)
+		\item Error backpropagation
+	\end{itemize}
+	
+	\subsection{Learning Vector Quantization LVQN}
+	%TODO 
+	%	Definition
 	
 \end{document}
