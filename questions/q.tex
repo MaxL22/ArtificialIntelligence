@@ -41,22 +41,13 @@
 %	fuzzy data analysis
 %	Swarm
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Domande sulla prima parte:
-%	MLP
-%	RBFN
-%	LVQN
-%	SOM
-%	Hopfield
-%	Boltzmann machines
-%	Recurrent
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Domande sulla seconda parte:
 %	Fuzzy Set
 %	Fuzzy Controller
 %	Fuzzy Data Analysis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Domande sulla terza parte:
 %	Evolutionary Algorithms
@@ -70,7 +61,7 @@
 
 \begin{document}
 	
-	\title{AI Questions}
+	\title{AI Summary}
 	\author{Massimo Perego}
 	\date{}
 	\maketitle
@@ -79,6 +70,16 @@
 	
 	\newpage
 	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% Domande sulla prima parte:
+	% x	MLP 
+	% x	RBFN
+	% x	LVQN
+	%	SOM
+	%	Hopfield
+	%	Boltzmann machines
+	%	Recurrent
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\section{Neural Networks}
 	
 	\subsection{Multi Layer Perceptrons MLP}
@@ -219,8 +220,33 @@
 		\item Error backpropagation
 	\end{itemize}
 	
-	\subsection{Learning Vector Quantization LVQN}
-	%TODO 
-	%	Definition
+	\subsection{Learning Vector Quantization LVQ}
+	
+	\subsubsection{Definition}
+	Learning Vector Quantization is a way to find a suitable quantization (many-to-few mapping, often to a finite set) of the input space, a way to divide in cluster the input space.The clusters are represented by a center or reference vector.\\
+	
+	The data points are processed one by one and only one reference vector per data point is updated. Competitive learning: only the "winner neuron", i.e., the one with the highest activation, is adapted
+	
+	\subsubsection{LVQ Networks}
+	A LVQN is a feed-forward 2-layered neural network. It can be seen as RBF without the output layer, the activation for each of the neurons in the hidden layer is used as output.\\
+	
+	The network input function for each output neuron is a distance function of input vector and weight vector, for some definition of distance.\\
+	Each neuron in the hidden layer has its own radial function centered in a different place whose input is a distance from input to weight vector.\\
+	
+	The output function of each output neuron also takes into consideration the activation of all input neurons: it's winner takes all, only the biggest activation will lead to a value of 1, all other neurons will be 0. We need a connection between all neurons in the output layer to "check the winner".\\
+	
+	\paragraph{Training:} We want to learn the position of the reference vector (center of the radial function). For each training pattern we find the closest reference vector (winner neuron) and adapt only that one. \\
+	
+	To adjust the weights we can use (assuming supervised learning):
+	\begin{itemize}
+		\item Attraction rule: reference vector and point have the same class, move the reference closer to the point
+		\item Repulsion rule: reference vector and point have different classes, move the reference away
+	\end{itemize}
+	There is a learning rate $\eta$ that determines how much the new information matters, this rate should be time-dependent, if it doesn't decrease as time goes on it could lead to oscillations without convergence.\\
+	
+	We also could update the two closest reference vectors, provided that they are of two different classes, by using attraction and repulsion rules. The point is in the middle of two clusters, update both the correct and wrong one (in the proper direction).\\
+	
+	Standard LVQ may drive reference vector further and further apart. The window rule consists in updating the data only if the point is close to the classification boundary, it's inside a "window". This way the adaptation stops as soon as the classification borders are far enough away.\\
+	
 	
 \end{document}
