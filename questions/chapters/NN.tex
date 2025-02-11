@@ -1,0 +1,249 @@
+\section{Neural Networks}
+
+\subsection{Multi Layer Perceptrons MLP}
+
+\subsubsection{Definition}
+An $r$-layered perceptron is a feed-forward neural network with a strictly layered structure and an acyclic graph.\\
+
+Each layer receives input from the preceding one and passes its output to the subsequent layer, jumps between non-consecutive layers are not allowed. Usually, each neuron is fully connected to the neurons in the preceding layer. \\
+
+They are "feed-forward", information flows in one direction only, there can't be cycles. They can have significant processing capabilities, since they can be increased by increasing the number of neurons and/or layers.\\
+
+There are different types of layers (and thus neurons):
+\begin{itemize}
+	\item Input: receive inputs from the external world
+	\item Hidden: one or more layers that perform transformations on the inputs
+	\item Output: produces the final outputs of the network
+\end{itemize}
+
+Each neuron receives multiple inputs, either from the previous layer or from the external world, each one with an associated weight. The network input function combines these input, usually with a weighted sum, and thus determines the global solicitation received by the neuron.\\
+
+The activation function determines the neuron's activation status based on its inputs. It is a so-called sigmoid function, a monotonically non-decreasing function with a range [0,1] (or [-1,1] for bipolar sigmoid functions). It (usually) introduces non-linearity, giving the neuron its processing capabilities and allowing the network to learn complex patterns (if they were linear we could merge all functions into one).\\
+
+The output function produces the final output of the neuron based on its activation status and the output is then passed to the next layer. It is often the identity function. It might be useful to scale the output to a desired range (linear function).\\
+
+\subsubsection{Function Approximation}
+Any Riemann-integrable function can be approximated with arbitrary accuracy by a four-layer multi-layer perceptron. We approximate the function into a step function and construct a neural network that computes said function.\\
+
+The input is taken by a single input neuron, and the first hidden layer is composed of a neuron for each of the step borders of our approximated function. Each neuron determines on which side of the step border an input lies.\\
+In the second hidden layer there's a neuron for each step, that receives input from the two neurons that refer to the values marking the border of the step. The weights and threshold are chosen is such a way that neurons in the second layer are active only if the function value is inside the step, i.e., only one of the neurons in the preceding layers is active. Only a single neuron in the second layer can be active at a time.\\
+The output layer has the identity function as activation and receives only the value of the step as input.\\
+
+The accuracy can be increased arbitrarily by increasing the number of steps.\\
+
+We can remove a layer and simplify the approach by considering the variation of the function value between each step. There is a single hidden layer and outputs from this layer are weighted with the relative difference between steps.\\
+
+\subsubsection{Regression}
+Training a NN is closely related to regression, the statistical technique for finding a function that best approximates the relationship in a data set; both regression and MLP training involve minimizing an error function, usually the mean square error. We need to adapt weights and parameters of the activation function to minimize said error.\\
+
+Types of regression: 
+\begin{itemize}
+	\item Linear: When a linear relationship between quantities is expected;
+	\item Polynomial Regression: Extends linear regression to polynomial functions of arbitrary order;
+	\item Multi-linear Regression: Used to fit functions with multiple arguments;
+	\item Logistic Regression: Particularly relevant to ANNs because many such networks use a logistic function as their activation function. If we can transform a function to a linear/polynomial case we can determine weights and thresholds for the system, for a logistic function this can be done by way of the Logit transformation, allowing a single neuron to compute the logistic regression function.
+\end{itemize}
+
+\subsubsection{Training}
+
+With the term "training", for an MLP, we're talking about minimizing the error function on the data set given for the training.\\
+
+\paragraph{Gradient Descent:} We can derive from the error function a direction in which to change the weights and thresholds to minimize the error.\\
+The gradient is a vector in the direction of the steepest increase of the function.\\
+We make small steps (size determined by a learning rate) in the direction indicated by the gradient on the error function until convergence, i.e., a local optima of the error function is found.\\
+This requires having a differentiable activation and output function.\\
+The algorithm will essentially be: 
+\begin{itemize}
+	\item Compute the gradient
+	\item Small step in the opposite direction of the gradient
+	\item Repeat until convergence
+\end{itemize}
+
+Some variants have been developed to address the challenge of learning rate selection and overcoming local optima:
+\begin{itemize}
+	\item Random restart: train the network multiple times, with different starting points
+	\item Momentum: Adds a fraction of the previous weight change to the current step
+	\item Manhattan Training: Uses only the sign of the gradient to determine the direction of the step, simplifying computation
+	\item Adaptive Learning Rates: Adapt the learning rate for each parameter based on the history of gradients
+\end{itemize}
+
+\paragraph{Error Backpropagation:} Only the output neurons are connected to the error, but we need to train the whole network. \\
+The error values of any (hidden) layer of a multi layer perceptron can be computed from the error values of is successor layer. The error is computed at the end of the network and then backpropagated through the whole network.\\
+General structure of the algorithm:
+\begin{enumerate}
+	\item Setting and forward propagation of the input
+	\item Calculate the error and adapt the weights for the last layer
+	\item Error backpropagation, the "new" error factor is computed starting from the error of the subsequent layer, and this is done layer by layer
+\end{enumerate}
+This allows to calculate how much each neuron "contributes" towards the final error.\\
+
+The weight adaptation depends on a learning rate, which has to be initialized properly in order to not "jump" over the minimum without ever converging (i.e., it's too high).\\
+
+The error can’t completely vanish due to the properties of the logistic function, there will always be some residual errors due to the computation of the various parameters.\\
+
+\subsubsection{Deep Learning}
+The term "Deep Learning" refers to a NN with several hidden layers. With "depth" we mean the number of layers that separate input and output. \\
+Approximating a function with only three layers might require a large (even exponential) number of neurons, while more hidden layers allow for the same approximation with less neurons. Increasing the number of hidden layers decreases complexity. Having less neurons also allows to use smaller data sets.\\
+
+The main problems with Deep Learning are: 
+\begin{itemize}
+	\item Overfitting: we're increasing the quantity of adaptable parameters, and thus capabilities, it might lead to overfitting. Some solutions are: weight decay (avoiding large values for the weights), sparsity constraints, dropout training; 
+	\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layers, usually as a series of stacked autoencoders: 3-layer perceptrons that maps its inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
+\end{itemize}
+
+\subsubsection{Convolutional Neural Networks}
+Still inside the field of deep learning, but the "receptive field" of each neuron is reduced, i.e., each neuron is connected only to a partial region of the input data (preceding layer, we're removing the fully connected constraint). This allows for very deep networks, with a reduced number of connections. The "convolutional" comes from all neurons in the same layer sharing the same weight, like convolution (kinda like sliding a window over an image).\\
+Neurons in the layer after the convolution apply maximum pooling, keeping only the maximum activation of the neurons for each sampled region, maintaining the obtained results but losing knowledge of their location in the original input. This allows to extract features and remove noise. \\
+Further layers allow for more high-level features, building a hierarchy over multiple stages.\\
+
+\subsection{Radial Basis Function Networks RBFN}
+
+\subsubsection{Definition}
+RBFNs are a feed-forward (the data flows only in one direction, forward, no cycles) neural networks with always three layers. Each previous layer is fully connected to the subsequent.\\
+In the hidden layer radial basis functions are employed as activation functions. A RBF is a function that peaks at zero and decreases in all other directions.\\
+
+From hidden to output neurons the activation function is the "classical" weighted sum of all inputs. The activation function of the output neurons is linear and propagates to the output.\\ 
+
+The input function of each hidden neuron is a distance function (there can be different types) between input and weight vectors. Each hidden neuron receives as input a distance. The activation function is a radial function, which decreases monotonically. The catchment region, defined by the reference radius $\sigma$, defines the shape and width of the function, i.e., the function is 1 at 0, decreases in some way until $\sigma$. Each neuron can have its own function.\\ 
+Since the function is activated based on distance, this draws a circle (or equivalent for a certain definition of distance) in the feature space, where the data considered is located.\\
+
+\subsubsection{Function Approximation}
+RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, alternatively, obtaining the same approximation with less neurons.\\
+
+Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the function that define the RBFN. Using rectangular functions give the same approximation as an MLP, while triangular or gaussian function allow smoother transitions between steps.\\
+
+\subsubsection{Training}
+Considering a case of supervised learning with a "simple RBFN", where each training example is covered by its own RBF, i.e., a neuron for each training example. \\
+In this case the weights to the hidden neurons are initialized with the value of the respective training example. \\
+The radii of the activation functions can be chosen heuristically in such a way that each function doesn't interfere with other patterns. We center each radial function around a specific pattern.\\
+We then can find analytically find the value of the weights from hidden to output neurons, it's the vector of desired outputs multiplied by the inverse of the matrix containing the hidden layer outputs.\\
+This method guarantees perfect approximation, it's not necessary to train a simple RBFN.\\
+
+General Radial Basis Function Networks possess fewer neurons than training examples, we need to select a subset of the training patterns as centers, which will become the input weights for the hidden neurons, then we find the weights for the output layer as before, with an over-determined matrix.\\
+
+We need to find "good" centers, since they influence the training, they become what the radial function is based on. A way to find the centers is C-means Clustering: considering  a number $c$ of clusters to be found
+\begin{enumerate}
+	\item Initialize the cluster centers randomly
+	\item Assign each training data point to the closest cluster center
+	\item Recalculate the centers from the new data points assigned 
+	\item Repeat the last two steps until convergence
+\end{enumerate}
+
+Then we can add backpropagation to train the network since it will not be perfectly accurate, following standard backpropagation rules. \\
+
+A 3-phases RBF training consists of: 
+\begin{itemize}
+	\item Find output connection weights with inverse
+	\item Find RBF centers (clustering)
+	\item Error backpropagation
+\end{itemize}
+
+\subsection{Learning Vector Quantization LVQ}
+
+\subsubsection{Definition}
+Learning Vector Quantization is a way to find a suitable quantization (many-to-few mapping, often to a finite set) of the input space, a way to divide in cluster the input space.The clusters are represented by a center or reference vector.\\
+
+The data points are processed one by one and only one reference vector per data point is updated. Competitive learning: only the "winner neuron", i.e., the one with the highest activation, is adapted
+
+\subsubsection{LVQ Networks}
+A LVQN is a feed-forward 2-layered neural network. It can be seen as RBF without the output layer, the activation for each of the neurons in the hidden layer is used as output.\\
+
+The network input function for each output neuron is a distance function of input vector and weight vector, for some definition of distance.\\
+Each neuron in the hidden layer has its own radial function centered in a different place whose input is a distance from input to weight vector.\\
+
+The output function of each output neuron also takes into consideration the activation of all input neurons: it's winner takes all, only the biggest activation will lead to a value of 1, all other neurons will be 0. We need a connection between all neurons in the output layer to "check the winner".\\
+
+\paragraph{Training:} We want to learn the position of the reference vector (center of the radial function). For each training pattern we find the closest reference vector (winner neuron) and adapt only that one. \\
+
+To adjust the weights we can use (assuming supervised learning):
+\begin{itemize}
+	\item Attraction rule: reference vector and point have the same class, move the reference closer to the point
+	\item Repulsion rule: reference vector and point have different classes, move the reference away
+\end{itemize}
+There is a learning rate $\eta$ that determines how much the new information matters, this rate should be time-dependent, if it doesn't decrease as time goes on it could lead to oscillations without convergence.\\
+
+We also could update the two closest reference vectors, provided that they are of two different classes, by using attraction and repulsion rules. The point is in the middle of two clusters, update both the correct and wrong one (in the proper direction).\\
+
+Standard LVQ may drive reference vector further and further apart. The window rule consists in updating the data only if the point is close to the classification boundary, it's inside a "window". This way the adaptation stops as soon as the classification borders are far enough away.\\
+
+\subsection{Self-Organizing Maps SOM}
+
+\subsubsection{Definition}
+SOM (or Kohonen feature maps) are a feed forward neural network with 2 layers, with local connections only among neighboring hidden/output neurons.\\
+
+The input to each output neuron is a distance function between the input vector and a weight vector. The activation function of each output neuron is a radial function.\\
+
+The output function of each output neuron is the identity, and the output is often discretized according to the winner-takes-all principle.\\
+
+There is a neighborhood relationship defined on the output neurons, the centers of the radial function are connected together, leading to a (usually two-dimensional) grid. Each neuron is connected to its nearest neighbor and has a region assigned to it. Reference vectors close to each other in the input space belong to neurons not too far away from each other.\\
+
+\subsubsection{Topology Preserving Mapping}
+The SOM perform a meaningful dimensionality reduction, preserving topology, i.e., maintaining spatial relationships present in the input data. We can map high-dimensional structures (input space) onto low-dimensional spaces.\\
+
+Training has to be adjusted to incorporate maintaining the neighboring structure, which works only on unsupervised learning.\\
+
+We need to modify the attraction rule in a way that considers the concept of neighborhoods, we do this by incorporating a radial neighborhood function, which determines if a neuron has to be updated (is inside the neighborhood radius). More than one neuron at a time is updated, in a way that takes into account the distance between winner neuron and the one to update (determined by the neighborhood function), i.e., all neurons.\\
+
+Learning rate and neighborhood function radius should decrease with time, to avoid oscillations and ensure convergence.\\
+
+For the training, the weight vector of the neuron in the self-organizing map is initialized randomly, the reference vectors are placed randomly, using random training examples.\\
+The training itself consists of:
+\begin{itemize}
+	\item choosing a training data point
+	\item finding the winner neuron, w.r.t. the distance function
+	\item adapt all neurons in the radius given by the time dependent neighborhood function 
+\end{itemize}
+
+\subsection{Hopfield Networks HN}
+%TODO
+%Associative memory, Simulated annealing
+
+\subsubsection{Definition}
+HN are a type of recurrent neural networks (it contains cycles, but no self-loops), in which every neuron is both input and output and all neurons are connected to every other.\\
+
+The connection weights are symmetric. \\
+The network input function of each neuron is the weighted sum of the outputs of all other neurons. \\
+The activation function of each neuron is a threshold function.\\
+The output function of each neuron is the identity.\\
+
+Since it's recurrent, the behavior depends on the update order of the neurons. It can be
+\begin{itemize}
+	\item synchronous: all at the same time, can lead to oscillations
+	\item sequential: one after the other
+\end{itemize}
+
+\paragraph{Convergence theorem:} If the neurons are updated sequentially, a stable state is always reached within a finite number of steps.\\
+To prove this, we can map every state of a HN to a real number, reduced with every state transition. This is called energy function.\\
+So the energy of the system can only decrease, we can't go back to higher energy states, eventually reaching a local minimum of the function, i.e., a stable state, a traversal of all the neurons without a state change.
+
+\subsubsection{Associative Memory}
+HN can easily implement associative memory, i.e., address memory by its contents. When presented a pattern, it returns whether this pattern coincides or not with an existing one and it doesn't need an exact coincidence.\\
+
+The associative memory works by exploiting the stable states of a HN: the weights and thresholds make the pattern coincide with the stable states.\\
+
+To store patterns in a HN (i.e., make them stable states), we need to find the weight and threshold that make each pattern a stable state of the system. The final weight matrix is the sum of all matrices computed for all patterns.\\
+
+\subsubsection{Solving Optimization Problems}
+We can exploit the minimization of the energy function to solve optimization problems by converting the function to optimize in an energy function to minimize and constructing the HN with weights and thresholds given by the energy function. Then we initialize the HN randomly and update until converge, each stable state is a local optima of the original function.\\
+
+The way a HN is updated limits the "moves" that can be performed since compound moves are not allowed if they increase energy before reducing it.\\
+We only know that the solution found will be a local optima, in a process similar to gradient descent/hill climbing.\\
+
+\paragraph{Simulated Annealing:} To solve getting stuck in a local optima, we start from the idea of Simulated Annealing: starting from a random solution, choose other random solutions (usually in a neighborhood) and evaluate them: accept them if they're better, while if they're worse accept them with a probability based on a parameter temperature that decreases over time.\\
+
+For a HN this can be translated into accepting a transition to a higher energy state with a certain probability, in hopes of finding a better solution.\\
+
+\subsection{Boltzmann Machines BM}
+%TODO
+% Definition, training, restricted
+
+\subsubsection{Definition}
+Instead of modeling a single pattern like a HN, BM want to model a probability distribution of the data over the whole input space.\\
+
+
+
+
+
+
+
+
