@@ -31,7 +31,7 @@ The output layer has the identity function as activation and receives only the v
 
 The accuracy can be increased arbitrarily by increasing the number of steps.\\
 
-We can remove a layer and simplify the approach by considering the variation of the function value between each step. There is a single hidden layer and outputs from this layer are weighted with the relative difference between steps.\\
+We can remove a layer and simplify the approach by considering the variation of the function value between each step. There is one hidden layer and outputs from this layer are weighted with the relative difference between steps.\\
 
 \subsubsection{Regression}
 Training a NN is closely related to regression, the statistical technique for finding a function that best approximates the relationship in a data set; both regression and MLP training involve minimizing an error function, usually the mean square error. We need to adapt weights and parameters of the activation function to minimize said error.\\
@@ -83,7 +83,7 @@ The error can’t completely vanish due to the properties of the logistic functi
 
 \subsubsection{Deep Learning}
 The term "Deep Learning" refers to a NN with several hidden layers. With "depth" we mean the number of layers that separate input and output. \\
-Approximating a function with only three layers might require a large (even exponential) number of neurons, while more hidden layers allow for the same approximation with less neurons. Increasing the number of hidden layers decreases complexity. Having less neurons also allows to use smaller data sets.\\
+Approximating a function with only three layers might require a large (even exponential) number of neurons, while more hidden layers allow for the same approximation with fewer neurons. Increasing the number of hidden layers decreases complexity. Having less neurons also allows using smaller data sets.\\
 
 The main problems with Deep Learning are: 
 \begin{itemize}
@@ -108,9 +108,9 @@ The input function of each hidden neuron is a distance function (there can be di
 Since the function is activated based on distance, this draws a circle (or equivalent for a certain definition of distance) in the feature space, where the data considered is located.\\
 
 \subsubsection{Function Approximation}
-RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, alternatively, obtaining the same approximation with less neurons.\\
+RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, alternatively, obtaining the same approximation with fewer neurons.\\
 
-Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the function that define the RBFN. Using rectangular functions give the same approximation as an MLP, while triangular or gaussian function allow smoother transitions between steps.\\
+Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the function that define the RBFN. Using rectangular functions give the same approximation as an MLP, while triangular or Gaussian function allow smoother transitions between steps.\\
 
 \subsubsection{Training}
 Considering a case of supervised learning with a "simple RBFN", where each training example is covered by its own RBF, i.e., a neuron for each training example. \\
@@ -151,7 +151,7 @@ A LVQN is a feed-forward 2-layered neural network. It can be seen as RBF without
 The network input function for each output neuron is a distance function of input vector and weight vector, for some definition of distance.\\
 Each neuron in the hidden layer has its own radial function centered in a different place whose input is a distance from input to weight vector.\\
 
-The output function of each output neuron also takes into consideration the activation of all input neurons: it's winner takes all, only the biggest activation will lead to a value of 1, all other neurons will be 0. We need a connection between all neurons in the output layer to "check the winner".\\
+The output function of each output neuron also takes into consideration the activation of all input neurons: winner takes all, only the biggest activation will lead to a value of 1, all other neurons will be 0. We need a connection between all neurons in the output layer to "check the winner".\\
 
 \paragraph{Training:} We want to learn the position of the reference vector (center of the radial function). For each training pattern we find the closest reference vector (winner neuron) and adapt only that one. \\
 
@@ -195,8 +195,6 @@ The training itself consists of:
 \end{itemize}
 
 \subsection{Hopfield Networks HN}
-%TODO
-%Associative memory, Simulated annealing
 
 \subsubsection{Definition}
 HN are a type of recurrent neural networks (it contains cycles, but no self-loops), in which every neuron is both input and output and all neurons are connected to every other.\\
@@ -217,7 +215,7 @@ To prove this, we can map every state of a HN to a real number, reduced with eve
 So the energy of the system can only decrease, we can't go back to higher energy states, eventually reaching a local minimum of the function, i.e., a stable state, a traversal of all the neurons without a state change.
 
 \subsubsection{Associative Memory}
-HN can easily implement associative memory, i.e., address memory by its contents. When presented a pattern, it returns whether this pattern coincides or not with an existing one and it doesn't need an exact coincidence.\\
+HN can easily implement associative memory, i.e., address memory by its contents. When presented a pattern, it returns whether this pattern coincides or not with an existing one, and it doesn't need an exact coincidence.\\
 
 The associative memory works by exploiting the stable states of a HN: the weights and thresholds make the pattern coincide with the stable states.\\
 
@@ -234,16 +232,65 @@ We only know that the solution found will be a local optima, in a process simila
 For a HN this can be translated into accepting a transition to a higher energy state with a certain probability, in hopes of finding a better solution.\\
 
 \subsection{Boltzmann Machines BM}
-%TODO
-% Definition, training, restricted
 
 \subsubsection{Definition}
-Instead of modeling a single pattern like a HN, BM want to model a probability distribution of the data over the whole input space.\\
+Instead of modeling a single pattern like a HN, BM want to model a probability distribution of the data over the whole input space. They differ from HN mainly in the way neuron states are updated.\\
+They're stochastic recurrent neural networks that model complex probability distributions.\\
 
+A probability distribution is defined on the states, based on the Boltzmann distribution, with the help of the energy function; more probable configurations are represented by lower energy states.\\
+The energy function takes as input the state of the system, represented by the vector of neuron activations.\\
+The probability of a neuron being active is a logistic function of the (scaled) energy difference between its active and inactive state.\\
 
+\paragraph{Update procedure:} Each update step is:
+\begin{itemize}
+	\item A neuron is chosen (randomly)
+	\item The energy difference and then the probability of the neuron having activation 1 are computed
+	\item The neuron is set to activation 1 with this probability (and to 0 with the complement of said probability)
+\end{itemize}
+Repeated many times, for randomly chosen neurons. This is a Markov-Chain Monte Carlo (MCMC) procedure.\\
 
+After enough steps, the probability of the network being in a specific activation state depends only on the energy of that state, independent of the activation state the process started with.\\
 
+\subsubsection{Training}
+The probability distribution represented by a Boltzmann machine via its energy function can be adapted to a given sample of data points, by adapting weight and threshold values.\\
+The data points must be compatible with a Boltzmann distribution, but we can mitigate this by dividing the neurons into visible and hidden; the activations of the latter are not fixed by the data points (deviation from the HN). The probability distribution is thus fixed only on the visible neurons.\\
 
+The approach is to measure the difference (needs some measure of distance/loss) between two probability distributions and use gradient descent to minimize said difference. Starting from random values, minimize through gradient descent the difference between distribution created and data given.\\
 
+There are two phases to each training step: 
+\begin{itemize}
+	\item positive: visible neurons are fixed to a random data point, hidden neurons are updated until a stable state is reached (we're using the data set)
+	\item negative: all units are updated until a stable state is reached (the system is free)
+\end{itemize}
+
+The update to weights and thresholds is given by the difference in probability of activation between the two phases. If a neuron is not activating enough times during the negative, the threshold should be lowered. If two neurons are active together more often during the positive, the weight among them should be increased.\\
+
+\subsubsection{Restricted Boltzmann Machines RBM}
+The training of standard BM is impractical unless the network is very small. To limit complexity, RBM use a bipartite graph instead of a complete one, connections go only from neurons in the visible layer to the hidden one, there are no connections among the same group (all input neurons are still also output neurons, hidden is just a name here).\\
+
+Due to lack of connections, the training can now proceed by repeating three steps: 
+\begin{enumerate}
+	\item visible units are fixed to a random data sample $\vec{x}$, hidden ones are updated once and in parallel, obtaining $\vec{y}$and retrieving positive gradient $xy^T$
+	\item hidden neurons are fixed to $\vec{y}$, visible ones are updated once and in parallel, "reconstructing" the training example $\vec{x}^\ast$. Fix the visible neurons to the reconstruction, update the hidden ones and obtain $\vec{y}^\ast$ and thus the negative gradient $x^\ast y^{\ast T}$
+	\item update the connection weights with the difference of the positive and the negative gradient (with a learning rate)
+\end{enumerate}
+
+RBM can be used to build deep networks, similar to stacked autoencoders for the MLP.\\
+
+\subsection{Recurrent Networks RNN}
+RNN are NN without the constraints of all networks seen until now.\\
+The output is generated when stability is reached.\\
+
+The configuration can be
+\begin{itemize}
+	\item by construction if the structure of the computation is known
+	\item by extending the error backpropagation algorithm in time to deal with recursion
+\end{itemize}
+
+RNN can be used to represent differential equations. The output of the network can be reconstructed by considering the output in the previous instant of time, i.e., using the derivative. This allows to transform the equation into an RNN, creating for each variable a node inside the graph and associating to the connections the value of the differential.\\
+
+\paragraph{Vectorial Neural Networks:} RNN can be composed of multiple recurrent sub-networks, allowing to compute vectorial differential equations.\\
+
+\paragraph{Error backpropagation in time:} Backpropagation is not directly applicable since loops propagate errors in a cyclic manner. We need to "unfold in time" the network, by considering all neurons for every time slice one after the other. Backpropagation is then computed on the "unfolded" network and adjustments of the same weight are combined to generate the final value.\\
 
 
