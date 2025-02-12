@@ -1,5 +1,135 @@
 \section{Fuzzy Systems}
 
 \subsection{Fuzzy Sets}
-%TODO
-% Definition, membership function, operations
+
+\subsubsection{Definition}
+Classical logic allows for only 2 truth values: \textit{true} and \textit{false}, but  many propositions in the real world are not always that well-defined and we use some imprecise linguistic terms. Also, as the complexity of a system increases, making precise and significant statements about its behavior becomes more difficult, rendering abstraction of details (i.e., approximation) needed.\\
+
+To model linguistic imprecision we use fuzzy systems, which allow approximate reasoning in automated systems, by considering "degree of truths", every proposition is true to a certain degree.\\
+
+A fuzzy set $\mu$ is a set of elements with a continuum of membership grades, i.e., a mapping
+$$ \mu: X \mapsto [0,1] $$
+assigning to each element $x \in X$ a degree of membership $\mu(x)$ between 0 (no membership) and 1 (full membership). Values of 0 and 1 correspond to the equivalent values in crisp sets.\\
+
+\paragraph{Membership function:} Expresses the degree to which an element belongs to a fuzzy set, without a discrete threshold, it aims to be an interface between linguistic model and numerical representation. The membership degrees are fixed only by convention and the unit interval between membership grades is arbitrary.\\
+Furthermore, the membership function attached to a specific linguistic description is dependent on the context ("young" in "young retired person" is different than in "young student").\\
+
+\paragraph{Linguistic Variables and Values:} Linguistic variables assume linguistic values and represent attributes in fuzzy systems. Linguistic values partition the possible values of  a variable subjectively, taking into account the value, set of values and context (for "size": "small, medium and large" mean 3 different "ranges" of possible membership). The grammar and fuzzy set for the linguistic expressions must also be defined.\\
+
+\paragraph{Semantics:} Fuzzy sets, and thus membership grades, can have different interpretations and can be used to model:
+\begin{itemize}
+	\item Similarity: the membership represents a degree of proximity from a prototype element; used in pattern classification, regression, cluster analysis
+	\item Preference: the membership represents intensity of preference and/or feasibility of a choice, the fuzzy set represents criteria/flexible constraints; used in fuzzy optimization, decision analysis
+	\item Possibility: the membership represents a degree of possibility that a certain parameter has the considered value, distinguishing plausible clauses from less likely ones; used in expert systems, artificial intelligence
+\end{itemize}
+
+\subsubsection{Representation of Fuzzy Sets}
+\paragraph{Vertical Representation:} Fuzzy sets can be described by their membership function by assigning a degree of membership to each element of the set mapped by the fuzzy set. Considering $\mu: X \mapsto [0,1]$, assign $\mu(x)$ to all $x \in X$; this is more natural but harder to use in automated systems.\\
+
+\paragraph{Horizontal representation:} For how many membership degrees we want, taken as a subset of $[0,1]$, list the subset of elements that have at least that membership value. Considering elements with value $\geq \alpha$, this is called $\alpha$-cut of the fuzzy set. Basically, for some $\alpha$, identify the set of input values with a membership degree higher than $\alpha$ (with $>$ are called strict $\alpha$-cuts). \\
+
+Any fuzzy set can be described using its $\alpha$-cuts, and the representation of a fuzzy set can be obtained as an upper envelope of its $\alpha$-cuts, i.e., I can obtain the fuzzy set starting from all its $\alpha$-cuts by considering, for each possible input value, the maximum membership degree ($\sup$) that contains said value.\\
+
+This representation is easier to process in computers, using finite discrete values for membership and input values, obtaining an approximation of the original fuzzy set. They are usually stored as a chain of linear lists, useful for arithmetic operators.\\
+
+\paragraph{Support:} Set of all elements of the input space that have non-zero membership.
+
+\paragraph{Core:} Set of all elements of the input space that have membership of one.
+
+\paragraph{Height:} The maximum membership values of any element in the input set. A fuzzy set is called "normal" if the height is 1.
+
+\paragraph{Fuzzy Number:} A fuzzy set is a fuzzy number iff it's normal, bounded, closed and convex.\\
+
+\subsubsection{Fuzzy Logic}
+We need to define "classic" operators on fuzzy sets, extending the truth table of each operator to deal with degrees of membership instead of crisp values. We need the ability to combine fuzzy truth values. A minimum requirement of this extension is that, when restricted to values 0 and 1, it should coincide with the classical operator. \\
+
+\paragraph{T-Norms:} A possible operator for the conjunction should keep commutativity, associativity and monotonicity of the classical operator. We also want that the conjunction between any proposition and truth value 1 results in the value of the first proposition. \\
+Any function that takes the unit interval squared (two fuzzy variables) and gives back a value in the interval, which respects these axioms is called a T-Norm. Corresponds to conjunction, and thus intersection since it's just the conjunction of each element being in the sets.\\
+
+\paragraph{T-Conorm:} Similarly to before, we want commutativity, associativity, monotonicity and that the disjunction between 0 and a proposition is equal to the value of the proposition. Any such function is a T-Conorm. Corresponds to disjunction and thus union, since it's just the disjunction of each element being in the sets.\\
+
+\paragraph{Negation:} The requisites for a negation operators are that the crisp values get "inverted", together with monotonicity. A simple negation operator is the complement: $\neg \mu(u) = 1 - \mu(u)$. It's called "strict" if the operator is strictly decreasing and "strong" if it's involutive $\neg \neg \mu(x) = \mu(x)$.\\
+
+\paragraph{Implication:} A simple way of defining it could be by using the already defined operators: $I(a,b) = \neg a \wedge b$. There can be many more, but they all come from the generalization in some way of the classical implication and they collapse to that when restricted to values 0 and 1.\\
+
+For all operators, there can be many ways of defining them, provided they respect the axioms/property stated. They can be defined based on the usage needed, making them dependent on the context.\\
+
+\paragraph{Extension principle:} We want to generalize mappings or functions defined on crisp values to fuzzy sets, using the interpretation of the partial truth of a membership degree. Starting from a crisp function $f: X \rightarrow Y$ and considering the fuzzy set $\mu$ on $X$, with membership function $\mu(x)$, the extension principle tells us how to determine the membership function of the fuzzy set on the co-domain after applying the function $f$.\\
+
+Basically, for each output value $(y\in Y)$, we look at all possible input values $(x \in X)$ that could produce $y$ through $f$ and take the highest membership degree among those.\\
+
+\paragraph{Arithmetic operations on fuzzy sets:} Arithmetic operations can be defined on fuzzy sets using the extension principle. It's desirable to reduce fuzzy arithmetic to ordinary set arithmetic and applying the elementary operations of interval arithmetic. We can do this by using a set representation, but the representation can be determined directly from the $\alpha$-cuts of an extension only if the function is continuous and and the fuzzy sets are upper semi-continuous (can be described by an upper semi-continuous function). Then the $\alpha$-cuts of the mapping are the mapping of the $\alpha$-cuts.\\
+
+\subsubsection{Fuzzy Relations}
+We want to generalize the idea of crisp relations to allow for degree of associations between elements. We want to represent the "strength" of the relation among elements.\\
+
+A fuzzy relation is a fuzzy set defined on tuples that may have a varying degree s of membership within the relation. The membership grade indicates the strength of the relation. A crisp relation tells us only if the element share the concept while a fuzzy relation tells us how much of that concept they share.\\
+
+The Cartesian product of fuzzy sets is usually a fuzzy relation, with (usually) membership degree equal to the minimum (T-Norm). A subsequence is a partial subset of tuples in a Cartesian product.\\
+
+\paragraph{Projection:} Reduce a multi-dimensional fuzzy relation to another one with less variables, removing some dimensions (literally a projection on one of the axis). We project a relation on a subset by taking the maximum in the relation for all subsequences considered. The max can be generalized to another T-Conorm.\\
+
+ \paragraph{Cylindric Extension:} Opposite of projection, extend a relation to all original dimensions. For each subsequence we want the largest, least specific, fuzzy relation compatible with the projection. No information not included in projection is used to determine the extended relation.\\
+ 
+ \paragraph{Cylindric Closure:} We can reconstruct the original relation starting from several of its projections. We take the intersection of all cylindric extensions.\\
+ 
+\subsubsection{Binary Fuzzy Relations}
+Binary relations are generalized mathematical functions, fuzzy binary relations introduce membership grades for the strength of the relation among two sets.\\
+
+Considering a fuzzy binary relation $R(X,Y)$:
+\begin{itemize}
+	\item \textbf{Domain:} maximum grade of each $x \in X$, considering any possible $y \in Y$
+	\item \textbf{Range:} maximum grade of each $y \in Y$, considering any possible $x \in X$
+	\item \textbf{Height:} maximum grade for each pair $(x,y) \in R$
+	\item \textbf{Inverse:} a relation can be represented by a matrix (think adjacency matrix for a graph), so the inverse of the relation is the transposed matrix
+\end{itemize}
+
+\paragraph{Binary Relations on a single set:} It's possible to define fuzzy binary relations among elements of a single set. A possible representation is a directed graph. A fuzzy binary relation is:
+\begin{itemize}
+	\item Reflexive iff $\forall x \in X: R(X^2) = 1$
+	\item Symmetric iff $\forall x,y \in X: R(x,y) = R(y,x)$
+	\item Transitive iff $\forall (x,z) \in X^2: R(x,z) \leq$ than the maximum possible value of $\min \{R(x,y), R(y,z)\}$, $\forall y \in Y$
+\end{itemize}
+A fuzzy binary relation which satisfies the properties above is called a fuzzy equivalence relation.\\
+
+\subsection{Fuzzy Control}
+%TODO Models, Operations
+
+Fuzzy Control is a way of defining a nonlinear table-based controller, the nonlinear transition function can be defined without specifying every entry of the table individually, it wants to specify a behavior.\\
+All control systems share a time-dependent output variable and said output is controlled by a control variable. Disturbance variable might influence the output.\\
+
+Since it's often very difficult to specify an accurate mathematical model for a system the fuzzy approach uses a knowledge-based analysis, via some linguistic rules.\\
+To define a fuzzy controller we need to formulate a set of linguistic rules, each input variable has to be partitioned into fuzzy sets representing the different states/levels of the variable. \\
+We need to identify, for each variable, the relevant linguistic terms and represent each one via a fuzzy set (what's the fuzzy set corresponding to a "high" load? What about "low" load?). Then we need to partition the domain of the input variable among all fuzzy sets.\\
+
+\subsubsection{Architecture of a Fuzzy Controller}
+The architecture of a fuzzy controller is composed of: 
+\begin{itemize}
+	\item Fuzzification interface: receives the current input value (eventually maps to a suitable domain), determines the degree to which each input belongs to each fuzzy set
+	\item Knowledge base: consists of data base and rule base; the data base contains information about boundaries, possible domain transformations and fuzzy sets with corresponding linguistic terms, while the rule base contains linguistic control rules
+	\item Decision logic: represents the processing unit, it computes output from the measured input, according to the knowledge base. It applies the fuzzy relation (the rules)
+	\item Defuzzification interface: determines the crisp output value (and eventually maps it back to the appropriate domain).
+\end{itemize}
+
+A normal process of a fuzzy controller might be:
+\begin{enumerate}
+	\item Input acquisition (not fuzzy output)
+	\item Fuzzification (fuzzy output)
+	\item Rule evaluation (fuzzy output)
+	\item Defuzzification (not fuzzy output)\\
+\end{enumerate}
+
+\paragraph{Defuzzification:} We need to convert fuzzy signals from the controller to a single, crisp, non-fuzzy value. After all the fuzzy rules are evaluated the outputs are combined into a single fuzzy set and this set is then defuzzified to produce a crisp output. Common defuzzification methods are: 
+\begin{itemize}
+	\item Max Criterion Method MCM: select an arbitrary value for which the maximum membership is reached; it can cause discontinuous behavior
+	\item Mean of Maxima MOM: takes the average of the values with the maximum membership degree in the output fuzzy set; discontinuous behavior
+	\item Center of Gravity COG: considers the center of the area under the membership function curve for the whole fuzzy domain; more complex but results in a more continuous behavior
+\end{itemize}
+
+\subsubsection{Models}
+
+\paragraph{Mamdani Controller:}
+
+\paragraph{Takagi-Sugeno Controller:}
+
+\paragraph{Similarity-based Reasoning:}
