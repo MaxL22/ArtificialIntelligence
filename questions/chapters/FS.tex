@@ -93,7 +93,6 @@ Considering a fuzzy binary relation $R(X,Y)$:
 A fuzzy binary relation which satisfies the properties above is called a fuzzy equivalence relation.\\
 
 \subsection{Fuzzy Control}
-%TODO Models, Operations
 
 Fuzzy Control is a way of defining a nonlinear table-based controller, the nonlinear transition function can be defined without specifying every entry of the table individually, it wants to specify a behavior.\\
 All control systems share a time-dependent output variable and said output is controlled by a control variable. Disturbance variable might influence the output.\\
@@ -128,8 +127,29 @@ A normal process of a fuzzy controller might be:
 
 \subsubsection{Models}
 
-\paragraph{Mamdani Controller:}
+\paragraph{Mamdani Controller:} The first model of fuzzy controller. It's based on a series of rules like "if $X$ is $M_n$ then $Y$ is $N_m$", where $M_n$ and $N_m$ are intervals that represent linguistic terms, $X$ is an input variable and $Y$ is an output variable. All rules are in the form "\textit{if-then}" form and should be interpreted as partial definition of a function. For multiple inputs a T-Norm is used.\\
 
-\paragraph{Takagi-Sugeno Controller:}
+% IDK %
+For each rule, we calculate its firing strength, then the value of all rules is aggregated (union of the Cartesian product of all sets) to obtain a fuzzy set that represents a description of the final output, which has to be defuzzified, usually through the COG method.\\
 
-\paragraph{Similarity-based Reasoning:}
+This is pretty easy and intuitive but the number of rules can grow quickly, increasing complexity, and defuzzification is computationally expensive.\\
+
+\paragraph{Takagi-Sugeno-Kang Controller:} The idea is similar to the Mamdani controller, but rules are in the form
+\begin{center}
+	$R:$ if $x_1$ is $\mu_1$ and $x_n$ is $\mu_n$, then $y = f(x_1, \dots , x_n)$ 
+\end{center}
+where $f(x_1, \dots , x_n)$ is a crisp function, generally linear. The idea is that, if we can define a "good" function for controlling each region described by the corresponding linguistic term then we can obtain a crisp output, removing the need for defuzzification. The final output is obtained by combining the result of each function with the firing strength of the associated rule.\\
+
+\paragraph{Similarity-based Reasoning:} The concept of "similarity relations" is used to make reasoning; they are a type of fuzzy relations that describe how similar pairs of elements are (equivalence relations but fuzzy). \\
+
+A function $E:X^2 \rightarrow [0,1]$ is defined as similarity relationship respect to a T-norm if and only if it satisfies:
+\begin{itemize}
+	\item Reflexivity: $E(x,x) = 1$ 
+	\item Symmetry: $E(x,y) = E(y,x)$
+	\item Transitivity: $\top (E(x,y),E(y,z)) = E(x,z)$
+\end{itemize}
+
+We interpret fuzzy sets as a "grades of similarity", starting known situations we can extract some "similarity classes" and thus rules for determining how the system behaves.\\
+
+\subsection{Fuzzy Data Analysis}
+%TODO Fuzzy clustering
