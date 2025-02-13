@@ -195,8 +195,31 @@ We can dynamically adapt the variance of the added vector in order to optimize c
 The variance is "good" when $1/5$ of the mutated elements are successful, i.e., have better fitness.\\
 We can also save, along with each chromosome, its variance, in order to determine which ones have "bad" variance and thus will lead to worse descendants; we can then remove them from subsequent generations.\\
 
-%TODO
-% Multi-criteria optimization
+\subsection{Multi-Criteria Optimization}
+
+There are cases in which optimization problems have multiple, possibly conflicting, objectives and constraints, each one represented by a fitness function $f_i: \Omega \rightarrow \mathbb{R}$. The easiest approach is to aggregate all functions into one, each one with its own weight reflecting its relevance. But the choice of weight might not be easy, how do we define relevance? 
+
+\paragraph{Arrow's impossibility theorem:} It's impossible to have an aggregated function that maximizes all single functions.\\
+
+\subsubsection{Pareto-Optimal solutions}
+A solution to Arrow's impossibility theorem is to choose Pareto-optimal solutions, i.e., a solution which can't increase the value of any function without another one getting worse. \\
+We don't need to aggregate all functions, removing the need for weights, but there are usually multiple Pareto-optimal solutions (Pareto frontier), and thus there's no single solution to the problem. \\
+
+It's possible to use EAs to find solutions inside (or close to) the Pareto frontier. The simplest approach consists in using a weighted sum of the objective functions as fitness function.\\
+
+\paragraph{Vector Evaluated Genetic Algorithm VEGA:} Given $k$ different criteria and the relative fitness functions, select $k$ solutions such as each one optimizes a different function. This is a simple approach and computationally easy, but penalized solutions that satisfy each criterion well but not perfectly, the search is focused on marginal solutions.\\
+
+\begin{definition}
+	An element \textit{dominates} another if it has a better or equal (only better for \textit{strict dominance}) value for each objective function.\\
+\end{definition}
+
+It's possible to take an approach based on dominance. We rank individuals based on dominance relationships; we find all the non-dominated solutions and assign them the highest rank, remove them from the population and repeat with the second-highest rank; continue until the population is empty. After ranking all solutions, the selection is based on the ranks.\\
+
+All individuals on the Pareto frontier are considered equally good and this can lead to genetic drift and convergence to a random extreme point. To avoid this we can use techniques to decide among elements of the same rank, e.g., power law sharing: if more individuals have similar fitness scores, new individuals similar to them will have lower fitness.\\
+
+These are the basis for Non-Dominated Sorted Genetic Algorithms, which also include generating offspring by way of genetic operators.\\
+
+
 
 
 
