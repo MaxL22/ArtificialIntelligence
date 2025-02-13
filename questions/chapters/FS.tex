@@ -197,4 +197,16 @@ To analyze random sets, we use upper and lower probabilities, which represent th
 
 We can generalize this concept, allowing the function $\Gamma$ to map random sets to a fuzzy function, to better represent uncertainty.\\
 
+\subsection{Neuro-Fuzzy Systems}
+
+Fuzzy systems manage high level reasoning, but can't adapt to new environments like NN can. It makes sense to combine the learning capacity of NN with the high-level representation of fuzzy systems to have a better interpretation of the internal states of a NN during computation.\\
+
+There are two modes of collaboration: 
+\begin{itemize}
+	\item cooperative model: the two systems work independently; the NN generates some parameters (offline) and then optimizes (online) for the fuzzy controller
+	\item hybrid model: fuzzy sets and rules mapped inside a NN, the two data structures are integrated with no overhead; fuzzy sets can be modeled both as weight between neurons that as activation function
+\end{itemize}
+
+
+
 
