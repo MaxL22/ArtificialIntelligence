@@ -154,9 +154,36 @@ So, the probability of preserving the schema is measured w.r.t. the defining len
 The theorem says that there is no evolutionary algorithm that can be used for all problems, no other algorithm is superior to the average.\\
 The "right" choice and encoding of the "correct" genetic operators depend on knowledge of the specific problem. \\
 
-%TODO 
-% Genetic programming
+\subsection{Genetic Programming GP}
+
+The idea behind GP is to automatically create programs able to solve problems, many of them can be seen as a search for a program; we need to connect input and output. GP is a family of evolutionary algorithms that allows the automatic creation of programs that solve problems.\\
+
+Similarly to genetic algorithms, we need an encoding that allows representation and manipulation of the single programs. Usually, the parse tree representation is chosen, where internal nodes are operations and the leaves are variables/constants. We define the problem-specific sets: $F$ of function symbols and operators and $T$ of terminal symbols (constants and variables). GP can solve problems efficiently and effectively, if such sets are sufficient and complete, to ensure that an appropriate program can be found. Finding the smallest sets is usually $\mathcal{NP}$-hard.\\
+For a boolean function the sets might be $F=\{\vee, \wedge, \neg\}$ and $T=\{x_0, \dots, x_n, 0, 1\}$.\\
+
+
+The algorithm is:
+\begin{enumerate}
+	\item Generate an initialization population of random expressions
+	\item Evaluate the fitness of said expressions
+	\item Selection with one of the EA strategies
+	\item Genetic operators, usually only crossover
+\end{enumerate}
+
+\subsubsection{Initialization}
+We need to generate a random population. There's no fixed length for the chromosomes (the programs), so we need some parameters like maximum height and maximum number of nodes. There are various methods to initialize the parse trees:
+\begin{itemize}
+	\item Full: leaves occur only at maximum depth, resulting in (full) symmetric trees
+	\item Grow: at any level there's uniform probability of having either an internal node or leaf, resulting in asymmetric trees
+	\item Ramp-half-and-half: combines both methods across different depths to increase diversity
+\end{itemize}
+
+\subsubsection{Genetic Operators}
+The evolution of the population takes place via genetic operators. The 3 most important are mutation, crossover and clonal reproduction. A typical crossover operator is exchanging two sub-expressions, i.e., choosing an internal node and switching the sub-trees. A mutation could be exchanging a sub-expression (sub-tree) with one randomly generated.\\
+
+%TODO
 % Evolutionary strategies 
 % Multi-criteria optimization
 
-\subsection{Genetic Programming}
+
+
