@@ -219,7 +219,18 @@ All individuals on the Pareto frontier are considered equally good and this can 
 
 These are the basis for Non-Dominated Sorted Genetic Algorithms, which also include generating offspring by way of genetic operators.\\
 
+\subsection{Parallel Evolutionary Algorithms}
+EA can lead to optimum results but might also lead to higher computation times because of the large population and number of generations needed. It's possible to parallelize some phases: 
+\begin{itemize}
+	\item The initial population can be easily parallelized
+	\item The evaluation is done on single individuals, independent of others 
+	\item Tournament, rank and roulette-wheel selection can be easily parallelized (after computing the initial values)
+	\item Genetic operators can be parallelized since they work on a few elements at a time
+	\item The termination criterion needs a central agency collecting information about the individuals
+\end{itemize} 
 
-
-
-
+In the literature, there are two architectures for parallel EAs:
+\begin{itemize}
+	\item Island Model: each population can be thought as inhabiting an island, the EA is applied on each island; it's parallel since it uses several independent populations. It's possible to introduce a migration of candidates between islands, not every generation; there is no recombination among elements of different islands. The population size of an island is increased ore decreased according to the average fitness of its individuals, usually with some bounds.
+	\item Cellular Evolution: Processors are arranged in a rectangular grid, and each one is responsible for a single chromosome. Mutation is done on the single processor, selection and crossover are restricted to adjacent processors.
+\end{itemize}
