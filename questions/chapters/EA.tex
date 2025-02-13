@@ -181,8 +181,21 @@ We need to generate a random population. There's no fixed length for the chromos
 \subsubsection{Genetic Operators}
 The evolution of the population takes place via genetic operators. The 3 most important are mutation, crossover and clonal reproduction. A typical crossover operator is exchanging two sub-expressions, i.e., choosing an internal node and switching the sub-trees. A mutation could be exchanging a sub-expression (sub-tree) with one randomly generated.\\
 
+\subsection{Evolutionary Strategies ES}
+
+In an ES we try to optimize the entire evaluation process instead of the single individual. We need parameters that depend on the choice of genetic operators.\\
+We consider an optimization problem as a function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ to minimize. Chromosomes (solutions encoding) are represented by a real-valued array. We then use mutation to move the vector inside the search space, modifying it by adding a vector randomly taken from a normal distribution. Only the best (mutated) elements proceed in the subsequent generation (elitism). Possible selection approaches are:
+\begin{itemize}
+	\item Plus strategy: selection works on both mutated and non-mutated elements (fitness can only improve, can get stuck in local optima)
+	\item Comma strategy: generate a lot of mutated individuals and choose solely among them (increases diversity)
+\end{itemize}
+
+We can dynamically adapt the variance of the added vector in order to optimize convergence; small variance leads to small changes (exploitation), high variance leads to big changes (exploration). \\
+
+The variance is "good" when $1/5$ of the mutated elements are successful, i.e., have better fitness.\\
+We can also save, along with each chromosome, its variance, in order to determine which ones have "bad" variance and thus will lead to worse descendants; we can then remove them from subsequent generations.\\
+
 %TODO
-% Evolutionary strategies 
 % Multi-criteria optimization
 
 
