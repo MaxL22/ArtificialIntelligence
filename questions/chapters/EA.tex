@@ -1,2 +1,115 @@
+	% Introduction
+	% Formalization
+	% Metaheuristics  
+	% Elements of an EA
+	% Selection
+	% Genetic Operators 
+	% Multi-Criteria optimization
+	% Swarm Intelligence
+
 \section{Evolutionary Algorithms}
 
+An optimization problem can be described by a triple $(\Omega, f, \prec)$, where $\Omega$ is the search space, $f$ is an objective function in the form $f: \Omega \rightarrow \mathbb{R}$ and $\prec$ a comparison relationship. We want to find an element $x \in \Omega$ which optimizes the function in the search space.\\
+
+\subsection{Metaheuristics}
+Metaheuristics are computational techniques which aim to solve approximately CO problems in several iterations, usually applied to $\mathcal{NP}$ problems. They often operate by improving upon a set of candidate solutions.\\
+ 
+ \paragraph{Local Search Methods:} Given $(\Omega, f, \prec)$, starting from a solution, we can search around it in a neighborhood searching for a local maximum. The search can proceed via gradient, if $f$ is differentiable (gradient ascent/descent), otherwise evaluating, either exhaustively or heuristically, the points around the solution (steepest descent/hill climbing).\\
+ 
+ \paragraph{Simulated Annealing:} We want a higher chance of moving from worse to better than the opposite. Starting from a solution, random variants are created and evaluated: they always replace the current reference solution if better, if worse they're accepted with a probability dependent on how much worse they are and a temperature parameter, which decreases with time.
+ 
+ \paragraph{Threshold Accepting:} Similar to simulated annealing, but with a limit on quality degradation of the solution.
+ 
+ \paragraph{Gread Deluge Algorithm:} Similar to before, but solutions are always accepted within an absolute bound.
+ 
+ \paragraph{Record-to-Record travel:} Similar to Gread Deluge, but the threshold is relative to the best solution found instead of absolute.\\
+ 
+ \paragraph{Tabu Search:} Considers history, forbids exploring previously considered solution candidates, usually for a set amount of time (tenure).\\
+ 
+ There's more, but I'm kinda bored and know them already. I don't think they're too useful so I'm just non gonna write them.\\
+ 
+ \subsection{Actual Evolutionary Algorithms}
+ 
+ The idea behind evolutionary computing is to mimic biological evolution, positive traits obtained by random mutations should be favored by natural selection. Starting from a population, we want to see how it evolves.\\
+ 
+ For  an evolutionary algorithm we need: 
+ \begin{itemize}
+ 	\item An encoding of the solutions, dependent on the problem
+ 	\item A method to create an initial population (usually random or by a simple heuristic)
+ 	\item An evaluation function to evaluate the fitness of each individual 
+ 	\item A selection criteria, in relation with the evaluation function, needed to select individuals that should go into successive generations
+ 	\item A set of genetic operators to modify chromosomes (pieces of the encoding); the most common two are mutation and crossover
+ 	\item Parameters for population size, mutation, \dots
+ 	\item Termination criteria
+ \end{itemize}
+ 
+EAs separate the search space $\Omega$ into genotype $\mathcal{G}$ for the encoding on which genetic operators act, and phenotype $\mathcal{F}$, on which the fitness function $f$ is defined. Fitness is what determines the chance of survival of an individual, and the strength of fitness in such probability is called "selective pressure", the higher the pressure the more good individuals are favored, it determines the balance between intensification on already found solutions and exploration of the search space.\\
+
+\subsubsection{Encoding}
+The encoding of the solutions should allow visiting the whole search space, be similar for similar candidates and the fitness function should return similar values for similar candidates. These are highly dependent on the problem and might not always be easily satisfiable.\\
+The encoding/decoding process should not be too computationally expensive.\\
+
+\subsubsection{Selection}
+At each generation, we want to create a new population starting from the previous one. There are various methods to select the individuals:
+\begin{itemize}
+	\item Roulette-wheel selection: random selection but each individual has probability proportional to its fitness; it's simple but has no guarantees, and might soon lead to stagnation if candidates end up having similar fitness
+	\item Rank-based selection: sort the individual by descending fitness, give probability to each of them based on their rank in the list and extract at random; it's more computationally complex due to the sorting but allows the decoupling of fitness value and selection probability
+	\item Tournament selection: a number of subsets of the population is chosen and there's a "tournament" for each subset, the best individual from each subset is kept
+	\item Elitist: keep only the best
+	\item Crowding: Individuals are replaced by similar ones
+\end{itemize}
+
+\subsubsection{Genetic Operators}
+To generate new elements starting from a population, we apply genetic operators on some or all the individuals. The operators can start from one, two or multiple parents.\\
+
+\paragraph{Mutation:} One-parent operator, it introduces changes on the genome of the candidate considered, useful for introducing biodiversity in the genetic pool. The specific mutation applied usually depends on the encoding of the solutions, but common ones are swaps of values, shifts and permutations.\\
+
+\paragraph{Crossover:} Two-parents operator, given two solutions it creates a new one: 
+\begin{itemize}
+	\item One-point crossover: determine a random position inside the encoded solution and swap the "tails"
+	\item N-point crossover: determine N random position and swap all odd(/even) parts
+	\item Uniform crossover: randomly extract a mask that determines whether or not to swap each gene in the encoding
+	\item Shuffle crossover: permute the genes randomly, one-point crossover, then un-mix the genes
+\end{itemize}
+
+The crossover can also be a multiple-parents operator: diagonal crossover, given $k$ parents, choose $k-1$ points and shift the pieces diagonally.\\
+
+\subsubsection{Introns}
+EAs tend to produce increasingly more complicated candidates, in part due to the presence of introns, pieces of DNA that carry no information and thus, for our case, that have no effect on the fitness. Mutation/recombination on introns has no effect.\\
+Introns can easily grow in number and complexity since they cause no direct penalty on the fitness function, but it's better to prevent introns as much as possible given that they increase the time needed to find significant data and make solution harder to interpret.\\
+
+Some solutions could be: modifying the fitness function to penalize introns, change the recombination phase in order to prevent them or prioritizing simple chromosomes, thus avoiding too many introns (sometimes at the expense of genetic diversity).\\
+
+\subsection{Swarm and Population based optimization}
+
+Swarm intelligence (SI) is a computational approach inspired by the collective behavior of social animals and insects, entailing simple individuals following simple rules with only local interactions that lead to a collective behavior that cannot be concluded based on the rules of a single individual. This concept can be used to develop multi-agent intelligent systems, able to perform a cooperative behavior. Single individuals can exchange information without a central control unit. A population of individuals moves in the search space.\\
+
+\subsubsection{Particle Swarm Optimization PSO}
+
+Inspired to the biological pattern of food research of birds and fishes. A swarm of candidates solutions aggregates information to guide the search. Each candidate updates its position based on personal and global memory. Informations are shared and the collective memory is used to find solutions.\\
+Each individual  is a possible candidate for being in the solution.\\
+
+\subsubsection{Ant Colony Optimization ACO}
+
+Inspired to the biological pattern of the ants searching for food. More promising paths are marked with pheromones, the individuals exchange information by editing the environment. Each candidate leaves a trail that modifies the search space for all others. Each individual is a possible candidate for being in the solution.\\
+
+\subsubsection{Population-based Incremental Learning PBIL}
+
+A population of individuals is generated randomly according to a probability distribution. Instead of explicitly conserving the memory of individuals, PBIL focuses on maintaining the statistics of the population.\\
+
+As a recombination operator is used the uniform crossover. The selection process only chooses individuals that improve the statistics of the population. The mutation is a simple bit flip.\\
+
+The distinctive feature is the learning rate, which tunes the possibility of movement of the individuals in the space. This changes in the time and is reduced with the number of iteration. This allows great mobility initially, eventually reducing when an optimum is found. \\
+%Some problems with this strategy:
+%\begin{itemize}
+%	\item The algorithm can learn some accidental dependency between the chromosomes of the individuals and 
+%	considering the single bits individually isoled from the others.
+%	2. The same statistics representation of the population can be used for dif-
+%	ferent populations
+%\end{itemize}
+
+%TODO 
+% Theoretical foundations
+% Genetic programming
+% Evolutionary strategies 
+% Multi-criteria optimization
