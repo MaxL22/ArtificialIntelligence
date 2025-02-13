@@ -1,10 +1,18 @@
 \documentclass{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage[hidelinks]{hyperref}
 \usepackage[parfill]{parskip}
 \usepackage[autostyle, english = american]{csquotes} 
 \MakeOuterQuote{"}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}[theorem]{Definition}
+
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\dl}{dl}
 
 %Domande nei vari appelli
 % 2024
@@ -77,11 +85,12 @@
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	% Domande sulla terza parte:
-	%	Evolutionary Algorithms
-	%	Swarm e Ant Colony Optimization
-	%	Swarm Intelligence
-	% 	Evolutionary Algorithms for multi-criteria optimization
-	%	EAs: coding chromosomes, fitness, selection, genetic operators
+	% X	EAs: encoding, selection, operators
+	% X	Swarm optimization
+	% X	Theoretical foundations
+	%	Genetic programming
+	%	Evolutionary strategies
+	%	Multi-criteria optimization
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	\include{chapters/EA}

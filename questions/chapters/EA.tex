@@ -1,12 +1,3 @@
-	% Introduction
-	% Formalization
-	% Metaheuristics  
-	% Elements of an EA
-	% Selection
-	% Genetic Operators 
-	% Multi-Criteria optimization
-	% Swarm Intelligence
-
 \section{Evolutionary Algorithms}
 
 An optimization problem can be described by a triple $(\Omega, f, \prec)$, where $\Omega$ is the search space, $f$ is an objective function in the form $f: \Omega \rightarrow \mathbb{R}$ and $\prec$ a comparison relationship. We want to find an element $x \in \Omega$ which optimizes the function in the search space.\\
@@ -108,8 +99,64 @@ The distinctive feature is the learning rate, which tunes the possibility of mov
 %	ferent populations
 %\end{itemize}
 
+\subsection{Theoretical foundations}
+
+\subsubsection{Schema Theorem}
+To analyze why evolutionary algorithms work, we can look at the schema theorem. Since these algorithms work on bit strings, we can consider only binary chromosomes, more precisely, we consider schemata partly specified binary chromosomes. We then investigate how the number of chromosomes matching a schema evolve over several generations. The objective is to give a rough stochastic statement that describes how these algorithms explore the search space.\\
+
+\begin{definition}
+	A \textit{Schema} $h$ is a character string of length $L$ over the alphabet $\{0,1,\ast\}$, $h \in \{0,1,\ast\}^L$. The $\ast$ is a wildcard character.\\
+\end{definition}
+
+\begin{definition}
+	\textit{Matching}, a binary chromosome $c \in \{0,1\}^L$ \textit{matches} a schema $h \in \{0,1,\ast\}^L$, written as $c \triangleleft h$ iff it coincides with $h$ at all positions where $h$ is 0 or 1, not taking into account $\ast$.\\
+\end{definition}
+
+We want to measure the effect of selection on the fitness. The individuals matching a schema in the next generation will in some way proportional to the measure of fitness of the schema. As a measure, mean relative fitness is usually chosen.\\
+
+To calculate the influence of mutations we need to measure the probability of preserving the schema even after the mutation.\\
+
+\begin{definition}
+	The \textit{Order of a schema} $h$ is the number of zeros and ones in $h$, $\ord(h) = \# 0 + \# 1 = L - \#\ast$.\\
+\end{definition}
+
+
+Considering one-point crossover, the probability that mutation preserves the schema $h$ is $(1-p_m)^{\ord(h)}$, where $p_m$ is the "mutation probability".\\
+So, the probability of preserving the schema is measured w.r.t. the defining length.\\
+
+\begin{definition}
+	The \textit{Defining length} of a schema $h$ ($\dl(h)$) is the difference between the position  of the last 0(1) and the first 0(1) in $h$.\\
+\end{definition}
+
+\begin{definition}
+	The probability that a chromosome is cut in such a way that some of the fixed characters of a schema lie on one side of a cut and some on the others is $\dl(h)/L-1$.\\
+\end{definition}
+
+\begin{definition}
+	$N(h,t)$ is the expected value of the number of chromosomes that match the schema $h$ during the $t$-th generation.\\
+\end{definition}
+
+\begin{definition}
+	$N(h, t + \Delta t_s)$ is the expected value of the number of chromosomes that match the schema $h$ during the $t$-th generation after selection.\\
+\end{definition}
+
+\begin{definition}
+	$N(h, t + \Delta t_s + \Delta t_x)$ is the expected value of the number of chromosomes that match the schema $h$ during the $t$-th generation after selection and crossover.\\
+\end{definition}
+
+\begin{definition}
+	$N(h, t + \Delta t_s + \Delta t_x + \Delta t_m) = N(h, t+1)$ is the expected value of the number of chromosomes that match the schema $h$ during the $t$-th generation after selection, crossover and mutation. The various $\Delta$ will depend on the probabilities of the single operators defined.\\
+\end{definition}
+
+\paragraph{Schema theorem:} It says that the schemas with a fitness score above the average, a short defining length and a low order, reproduces in an approximately exponential way.\\
+
+\subsubsection{No free lunch theorem}
+The theorem says that there is no evolutionary algorithm that can be used for all problems, no other algorithm is superior to the average.\\
+The "right" choice and encoding of the "correct" genetic operators depend on knowledge of the specific problem. \\
+
 %TODO 
-% Theoretical foundations
 % Genetic programming
 % Evolutionary strategies 
 % Multi-criteria optimization
+
+\subsection{Genetic Programming}
