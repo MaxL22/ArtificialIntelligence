@@ -152,4 +152,49 @@ A function $E:X^2 \rightarrow [0,1]$ is defined as similarity relationship respe
 We interpret fuzzy sets as a "grades of similarity", starting known situations we can extract some "similarity classes" and thus rules for determining how the system behaves.\\
 
 \subsection{Fuzzy Data Analysis}
-%TODO Fuzzy clustering
+
+The term "fuzzy data analysis" can refer to two different approaches:
+\begin{itemize}
+	\item fuzzy analysis of crisp data (fuzzy clustering)
+	\item analysis of data in the shape of a fuzzy set (random set)
+\end{itemize}
+
+\subsubsection{Fuzzy Clustering}
+We want to divide a set of data (unsupervised learning) in a way that makes objects in the same cluster the most possible similar and objects in different cluster the most possible different. With "difference" being interpreted as some measure of distance between objects, less is more similar; we'll assume a Euclidean distance.\\
+
+We've already seen the idea behind \hyperref[point:c-means]{\texttt{crisp c-means clustering}}. With crisp clusters, a cluster partition is optimal when the sum of distances between centers and elements is minimum. This way, when a point is in the middle of two clusters the assignment is arbitrary.\\
+Fuzzy clustering solves this problem by introducing a continuous membership $\in [0,1]$ to each cluster, each point can belong to more than one cluster. There are two types of fuzzy clustering: probabilistic and possibilistic. In the first case we have the assumptions that no cluster can be empty and that the sum of all membership for each point is 1, for the latter we keep only the first assumption.\\
+
+\paragraph{Issues:} How do we know how many clusters the algorithm is supposed to consider? We could try visualizing, but with a high number of dimensions it becomes unfeasible. We need some evaluation criteria:
+\begin{itemize}
+	\item Clarity of separation: how distinct are the clusters
+	\item Minimum volume between clusters: we want to minimize cluster overlap
+	\item Maximum number of points focused near the centroid of the cluster: we want the uncertainty of the points in each center at a minimum
+\end{itemize}
+Some common metrics are: 
+\begin{itemize}
+	\item Partition Coefficient PC: it measures the clarity of the partition
+	\item Average Partition Density APD: it measures the average density of a cluster
+	\item Partition Entropy PE: it measures the entropy of the partition, giving an idea of how uncertain it is
+\end{itemize}
+
+\paragraph{Variants:} Using Euclidean distances limits the types of clusters since they can only be spherical, variants have been proposed to relax this constraint. Gustafson-Kessel's algorithm uses Mahalanobis distance, which is computationally more expensive but allows for more flexibility in the clusters' dimensions (elliptical shape).\\
+
+Another approach consists in allowing non-convex clusters, such as the shell clustering algorithms; useful for image recognition and analysis.\\
+
+In the case of non-vectorial data (graphs, trees, \dots) it might be useful a kernel-based clustering. It uses a map from the input space to a Hilbert space, in which data is transformed. The similarity between points is computed through a kernel function, i.e., the scalar product of the points mapped to the Hilbert space. It doesn't generate an explicit representation of the clusters but this allows for a more flexible representation.\\
+
+When there are outliers it might be useful to add a noise cluster to manage them. It's not explicitly associated to any prototype, but each point has a probability of being part of the noise cluster, adapted during the optimization phase.\\
+
+\subsubsection{Random Sets}
+We want to extend the fuzzy techniques to work on fuzzy data. A random variable is a mapping from the probability space (cases) to a set $X: \Omega \rightarrow U$ (usually $\mathbb{R}$), a random set is the generalization of this concept, the mapping doesn't go to a single value but to a subset of values $\Gamma: \Omega \rightarrow 2^U$. \\
+
+To analyze random sets, we use upper and lower probabilities, which represent the probability that the random set
+\begin{itemize}
+	\item has an intersection with the upper probability
+	\item is completely contained within the lower probability
+\end{itemize}
+
+We can generalize this concept, allowing the function $\Gamma$ to map random sets to a fuzzy function, to better represent uncertainty.\\
+
+

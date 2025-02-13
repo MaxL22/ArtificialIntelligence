@@ -121,6 +121,7 @@ This method guarantees perfect approximation, it's not necessary to train a simp
 
 General Radial Basis Function Networks possess fewer neurons than training examples, we need to select a subset of the training patterns as centers, which will become the input weights for the hidden neurons, then we find the weights for the output layer as before, with an over-determined matrix.\\
 
+\label{point:c-means}
 We need to find "good" centers, since they influence the training, they become what the radial function is based on. A way to find the centers is C-means Clustering: considering  a number $c$ of clusters to be found
 \begin{enumerate}
 	\item Initialize the cluster centers randomly
@@ -292,5 +293,3 @@ RNN can be used to represent differential equations. The output of the network c
 \paragraph{Vectorial Neural Networks:} RNN can be composed of multiple recurrent sub-networks, allowing to compute vectorial differential equations.\\
 
 \paragraph{Error backpropagation in time:} Backpropagation is not directly applicable since loops propagate errors in a cyclic manner. We need to "unfold in time" the network, by considering all neurons for every time slice one after the other. Backpropagation is then computed on the "unfolded" network and adjustments of the same weight are combined to generate the final value.\\
-
-
