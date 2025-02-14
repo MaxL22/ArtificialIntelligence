@@ -2,7 +2,6 @@
 
 \subsection{Fuzzy Sets}
 
-\subsubsection{Definition}
 Classical logic allows for only 2 truth values: \textit{true} and \textit{false}, but  many propositions in the real world are not always that well-defined and we use some imprecise linguistic terms. Also, as the complexity of a system increases, making precise and significant statements about its behavior becomes more difficult, rendering abstraction of details (i.e., approximation) needed.\\
 
 To model linguistic imprecision we use fuzzy systems, which allow approximate reasoning in automated systems, by considering "degree of truths", every proposition is true to a certain degree.\\
@@ -63,7 +62,7 @@ Basically, for each output value $(y\in Y)$, we look at all possible input value
 \subsubsection{Fuzzy Relations}
 We want to generalize the idea of crisp relations to allow for degree of associations between elements. We want to represent the "strength" of the relation among elements.\\
 
-A fuzzy relation is a fuzzy set defined on tuples that may have a varying degree s of membership within the relation. The membership grade indicates the strength of the relation. A crisp relation tells us only if the element share the concept while a fuzzy relation tells us how much of that concept they share.\\
+A fuzzy relation is a fuzzy set defined on tuples that may have a varying degrees of membership within the relation. The membership grade indicates the strength of the relation. A crisp relation tells us only if the element share the concept while a fuzzy relation tells us how much of that concept they share.\\
 
 The Cartesian product of fuzzy sets is usually a fuzzy relation, with (usually) membership degree equal to the minimum (T-Norm). A subsequence is a partial subset of tuples in a Cartesian product.\\
 
@@ -86,7 +85,7 @@ Considering a fuzzy binary relation $R(X,Y)$:
 
 \paragraph{Binary Relations on a single set:} It's possible to define fuzzy binary relations among elements of a single set. A possible representation is a directed graph. A fuzzy binary relation is:
 \begin{itemize}
-	\item Reflexive iff $\forall x \in X: R(X^2) = 1$
+	\item Reflexive iff $\forall x \in X: R(x,x) = 1$
 	\item Symmetric iff $\forall x,y \in X: R(x,y) = R(y,x)$
 	\item Transitive iff $\forall (x,z) \in X^2: R(x,z) \leq$ than the maximum possible value of $\min \{R(x,y), R(y,z)\}$, $\forall y \in Y$
 \end{itemize}
@@ -97,14 +96,14 @@ A fuzzy binary relation which satisfies the properties above is called a fuzzy e
 Fuzzy Control is a way of defining a nonlinear table-based controller, the nonlinear transition function can be defined without specifying every entry of the table individually, it wants to specify a behavior.\\
 All control systems share a time-dependent output variable and said output is controlled by a control variable. Disturbance variable might influence the output.\\
 
-Since it's often very difficult to specify an accurate mathematical model for a system the fuzzy approach uses a knowledge-based analysis, via some linguistic rules.\\
+Since it's often very difficult to specify an accurate mathematical model for a system the fuzzy approach uses a knowledge-based analysis, implemented via some linguistic rules.\\
 To define a fuzzy controller we need to formulate a set of linguistic rules, each input variable has to be partitioned into fuzzy sets representing the different states/levels of the variable. \\
 We need to identify, for each variable, the relevant linguistic terms and represent each one via a fuzzy set (what's the fuzzy set corresponding to a "high" load? What about "low" load?). Then we need to partition the domain of the input variable among all fuzzy sets.\\
 
 \subsubsection{Architecture of a Fuzzy Controller}
 The architecture of a fuzzy controller is composed of: 
 \begin{itemize}
-	\item Fuzzification interface: receives the current input value (eventually maps to a suitable domain), determines the degree to which each input belongs to each fuzzy set
+	\item Fuzzification interface: receives the current input value (eventually maps it to a suitable domain), determines the degree to which each input belongs to each fuzzy set
 	\item Knowledge base: consists of data base and rule base; the data base contains information about boundaries, possible domain transformations and fuzzy sets with corresponding linguistic terms, while the rule base contains linguistic control rules
 	\item Decision logic: represents the processing unit, it computes output from the measured input, according to the knowledge base. It applies the fuzzy relation (the rules)
 	\item Defuzzification interface: determines the crisp output value (and eventually maps it back to the appropriate domain).
@@ -149,7 +148,7 @@ A function $E:X^2 \rightarrow [0,1]$ is defined as similarity relationship respe
 	\item Transitivity: $\top (E(x,y),E(y,z)) = E(x,z)$
 \end{itemize}
 
-We interpret fuzzy sets as a "grades of similarity", starting known situations we can extract some "similarity classes" and thus rules for determining how the system behaves.\\
+We interpret fuzzy sets as "grades of similarity", starting from known situations we can extract some "similarity classes" and thus rules for determining how the system behaves.\\
 
 \subsection{Fuzzy Data Analysis}
 

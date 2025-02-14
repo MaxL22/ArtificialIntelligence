@@ -17,7 +17,7 @@ Metaheuristics are computational techniques which aim to solve approximately CO 
  
  \paragraph{Tabu Search:} Considers history, forbids exploring previously considered solution candidates, usually for a set amount of time (tenure).\\
  
- There's more, but I'm kinda bored and know them already. I don't think they're too useful so I'm just non gonna write them.\\
+ There's more, but I'm kinda bored and know them already. I don't think they're too useful, so I'm just not gonna write them.\\
  
  \subsection{Actual Evolutionary Algorithms}
  
@@ -34,7 +34,7 @@ Metaheuristics are computational techniques which aim to solve approximately CO 
  	\item Termination criteria
  \end{itemize}
  
-EAs separate the search space $\Omega$ into genotype $\mathcal{G}$ for the encoding on which genetic operators act, and phenotype $\mathcal{F}$, on which the fitness function $f$ is defined. Fitness is what determines the chance of survival of an individual, and the strength of fitness in such probability is called "selective pressure", the higher the pressure the more good individuals are favored, it determines the balance between intensification on already found solutions and exploration of the search space.\\
+EAs separate the search space $\Omega$ into genotype $\mathcal{G}$ for the encoding on which genetic operators act, and phenotype $\mathcal{F}$, on which the fitness function $f$ is defined. Fitness is what determines the chance of survival of an individual, and the extent to which fitness influences such probability is called "selective pressure", the higher the pressure the more good individuals are favored, it determines the balance between intensification on already found solutions and exploration of the search space.\\
 
 \subsubsection{Encoding}
 The encoding of the solutions should allow visiting the whole search space, be similar for similar candidates and the fitness function should return similar values for similar candidates. These are highly dependent on the problem and might not always be easily satisfiable.\\
@@ -183,7 +183,7 @@ The evolution of the population takes place via genetic operators. The 3 most im
 
 \subsection{Evolutionary Strategies ES}
 
-In an ES we try to optimize the entire evaluation process instead of the single individual. We need parameters that depend on the choice of genetic operators.\\
+In an ES we try to optimize the entire evolutionary process instead of the single individual. We need parameters that depend on the choice of genetic operators.\\
 We consider an optimization problem as a function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ to minimize. Chromosomes (solutions encoding) are represented by a real-valued array. We then use mutation to move the vector inside the search space, modifying it by adding a vector randomly taken from a normal distribution. Only the best (mutated) elements proceed in the subsequent generation (elitism). Possible selection approaches are:
 \begin{itemize}
 	\item Plus strategy: selection works on both mutated and non-mutated elements (fitness can only improve, can get stuck in local optima)
@@ -192,7 +192,7 @@ We consider an optimization problem as a function $f: \mathbb{R}^n \rightarrow \
 
 We can dynamically adapt the variance of the added vector in order to optimize convergence; small variance leads to small changes (exploitation), high variance leads to big changes (exploration). \\
 
-The variance is "good" when $1/5$ of the mutated elements are successful, i.e., have better fitness.\\
+The variance is "good" when $1/5$ of the mutated elements are successful, i.e., they result in better fitness.\\
 We can also save, along with each chromosome, its variance, in order to determine which ones have "bad" variance and thus will lead to worse descendants; we can then remove them from subsequent generations.\\
 
 \subsection{Multi-Criteria Optimization}

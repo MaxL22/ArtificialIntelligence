@@ -2,7 +2,6 @@
 
 \subsection{Multi Layer Perceptrons MLP}
 
-\subsubsection{Definition}
 An $r$-layered perceptron is a feed-forward neural network with a strictly layered structure and an acyclic graph.\\
 
 Each layer receives input from the preceding one and passes its output to the subsequent layer, jumps between non-consecutive layers are not allowed. Usually, each neuron is fully connected to the neurons in the preceding layer. \\
@@ -88,7 +87,7 @@ Approximating a function with only three layers might require a large (even expo
 The main problems with Deep Learning are: 
 \begin{itemize}
 	\item Overfitting: we're increasing the quantity of adaptable parameters, and thus capabilities, it might lead to overfitting. Some solutions are: weight decay (avoiding large values for the weights), sparsity constraints, dropout training; 
-	\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layers, usually as a series of stacked autoencoders: 3-layer perceptrons that maps its inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
+	\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layers, usually as a series of stacked autoencoders: 3-layer perceptrons that maps their inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
 \end{itemize}
 
 \subsubsection{Convolutional Neural Networks}
@@ -98,7 +97,6 @@ Further layers allow for more high-level features, building a hierarchy over mul
 
 \subsection{Radial Basis Function Networks RBFN}
 
-\subsubsection{Definition}
 RBFNs are a feed-forward (the data flows only in one direction, forward, no cycles) neural networks with always three layers. Each previous layer is fully connected to the subsequent.\\
 In the hidden layer radial basis functions are employed as activation functions. A RBF is a function that peaks at zero and decreases in all other directions.\\
 
@@ -116,7 +114,8 @@ Each function can be approximated by a delta approach in which the resulting fun
 Considering a case of supervised learning with a "simple RBFN", where each training example is covered by its own RBF, i.e., a neuron for each training example. \\
 In this case the weights to the hidden neurons are initialized with the value of the respective training example. \\
 The radii of the activation functions can be chosen heuristically in such a way that each function doesn't interfere with other patterns. We center each radial function around a specific pattern.\\
-We then can find analytically find the value of the weights from hidden to output neurons, it's the vector of desired outputs multiplied by the inverse of the matrix containing the hidden layer outputs.\\
+We then can find analytically the value of the weights ($\vec{w}_u$) from hidden to output neurons, it's the vector of desired outputs ($\vec{o}_u$) multiplied by the inverse of the matrix containing the hidden layer outputs $\bm{A}$
+$$ \bm{A} \cdot \vec{w}_u = \vec{o}_u \implies \vec{w}_u = A^{-1} \cdot \vec{o}_u $$
 This method guarantees perfect approximation, it's not necessary to train a simple RBFN.\\
 
 General Radial Basis Function Networks possess fewer neurons than training examples, we need to select a subset of the training patterns as centers, which will become the input weights for the hidden neurons, then we find the weights for the output layer as before, with an over-determined matrix.\\
@@ -141,8 +140,7 @@ A 3-phases RBF training consists of:
 
 \subsection{Learning Vector Quantization LVQ}
 
-\subsubsection{Definition}
-Learning Vector Quantization is a way to find a suitable quantization (many-to-few mapping, often to a finite set) of the input space, a way to divide in cluster the input space.The clusters are represented by a center or reference vector.\\
+Learning Vector Quantization is a way to find a suitable quantization (many-to-few mapping, often to a finite set) of the input space, a way to divide in cluster the input space. The clusters are represented by a center or reference vector.\\
 
 The data points are processed one by one and only one reference vector per data point is updated. Competitive learning: only the "winner neuron", i.e., the one with the highest activation, is adapted
 
@@ -163,13 +161,12 @@ To adjust the weights we can use (assuming supervised learning):
 \end{itemize}
 There is a learning rate $\eta$ that determines how much the new information matters, this rate should be time-dependent, if it doesn't decrease as time goes on it could lead to oscillations without convergence.\\
 
-We also could update the two closest reference vectors, provided that they are of two different classes, by using attraction and repulsion rules. The point is in the middle of two clusters, update both the correct and wrong one (in the proper direction).\\
+We also could update the two closest reference vectors, provided that they are of two different classes, by using attraction and repulsion rules. The point is in the middle of two clusters, update both the correct and wrong one (in the proper directions).\\
 
 Standard LVQ may drive reference vector further and further apart. The window rule consists in updating the data only if the point is close to the classification boundary, it's inside a "window". This way the adaptation stops as soon as the classification borders are far enough away.\\
 
 \subsection{Self-Organizing Maps SOM}
 
-\subsubsection{Definition}
 SOM (or Kohonen feature maps) are a feed forward neural network with 2 layers, with local connections only among neighboring hidden/output neurons.\\
 
 The input to each output neuron is a distance function between the input vector and a weight vector. The activation function of each output neuron is a radial function.\\
@@ -183,7 +180,7 @@ The SOM perform a meaningful dimensionality reduction, preserving topology, i.e.
 
 Training has to be adjusted to incorporate maintaining the neighboring structure, which works only on unsupervised learning.\\
 
-We need to modify the attraction rule in a way that considers the concept of neighborhoods, we do this by incorporating a radial neighborhood function, which determines if a neuron has to be updated (is inside the neighborhood radius). More than one neuron at a time is updated, in a way that takes into account the distance between winner neuron and the one to update (determined by the neighborhood function), i.e., all neurons.\\
+We need to modify the attraction rule in a way that considers the concept of neighborhoods, we do this by incorporating a radial neighborhood function which determines if a neuron has to be updated (i.e., if it's inside the neighborhood radius). More than one neuron at a time can be updated, in a way that takes into account the distance between winner neuron and the one to update (determined by the neighborhood function).\\
 
 Learning rate and neighborhood function radius should decrease with time, to avoid oscillations and ensure convergence.\\
 
@@ -197,7 +194,6 @@ The training itself consists of:
 
 \subsection{Hopfield Networks HN}
 
-\subsubsection{Definition}
 HN are a type of recurrent neural networks (it contains cycles, but no self-loops), in which every neuron is both input and output and all neurons are connected to every other.\\
 
 The connection weights are symmetric. \\
@@ -234,7 +230,6 @@ For a HN this can be translated into accepting a transition to a higher energy s
 
 \subsection{Boltzmann Machines BM}
 
-\subsubsection{Definition}
 Instead of modeling a single pattern like a HN, BM want to model a probability distribution of the data over the whole input space. They differ from HN mainly in the way neuron states are updated.\\
 They're stochastic recurrent neural networks that model complex probability distributions.\\
 
@@ -271,7 +266,7 @@ The training of standard BM is impractical unless the network is very small. To 
 
 Due to lack of connections, the training can now proceed by repeating three steps: 
 \begin{enumerate}
-	\item visible units are fixed to a random data sample $\vec{x}$, hidden ones are updated once and in parallel, obtaining $\vec{y}$and retrieving positive gradient $xy^T$
+	\item visible units are fixed to a random data sample $\vec{x}$, hidden ones are updated once and in parallel, obtaining $\vec{y}$ and retrieving positive gradient $xy^T$
 	\item hidden neurons are fixed to $\vec{y}$, visible ones are updated once and in parallel, "reconstructing" the training example $\vec{x}^\ast$. Fix the visible neurons to the reconstruction, update the hidden ones and obtain $\vec{y}^\ast$ and thus the negative gradient $x^\ast y^{\ast T}$
 	\item update the connection weights with the difference of the positive and the negative gradient (with a learning rate)
 \end{enumerate}
@@ -288,7 +283,7 @@ The configuration can be
 	\item by extending the error backpropagation algorithm in time to deal with recursion
 \end{itemize}
 
-RNN can be used to represent differential equations. The output of the network can be reconstructed by considering the output in the previous instant of time, i.e., using the derivative. This allows to transform the equation into an RNN, creating for each variable a node inside the graph and associating to the connections the value of the differential.\\
+RNN can be used to represent differential equations. The output of the network can be reconstructed by considering the output in the previous instant of time, i.e., using the derivative. This allows to transform the equation into a RNN, creating for each variable a node inside the graph and associating to the connections the value of the differential.\\
 
 \paragraph{Vectorial Neural Networks:} RNN can be composed of multiple recurrent sub-networks, allowing to compute vectorial differential equations.\\
 
