@@ -106,16 +106,16 @@ The input function of each hidden neuron is a distance function (there can be di
 Since the function is activated based on distance, this draws a circle (or equivalent for a certain definition of distance) in the feature space, where the data considered is located.\\
 
 \subsubsection{Function Approximation}
-RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, alternatively, obtaining the same approximation with fewer neurons.\\
+RBFNs are universal approximators, like MLPs, but give more choices on how to approximate, improving the approximation, or, alternatively, allowing to obtain the same approximation with fewer neurons.\\
 
-Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the function that define the RBFN. Using rectangular functions give the same approximation as an MLP, while triangular or Gaussian function allow smoother transitions between steps.\\
+Each function can be approximated by a delta approach in which the resulting function is the weighted sum of the functions that define the RBFN. Using rectangular functions gives the same approximation as an MLP, while triangular or Gaussian function allow smoother transitions between steps.\\
 
 \subsubsection{Training}
 Considering a case of supervised learning with a "simple RBFN", where each training example is covered by its own RBF, i.e., a neuron for each training example. \\
 In this case the weights to the hidden neurons are initialized with the value of the respective training example. \\
 The radii of the activation functions can be chosen heuristically in such a way that each function doesn't interfere with other patterns. We center each radial function around a specific pattern.\\
 We then can find analytically the value of the weights ($\vec{w}_u$) from hidden to output neurons, it's the vector of desired outputs ($\vec{o}_u$) multiplied by the inverse of the matrix containing the hidden layer outputs $\bm{A}$
-$$ \bm{A} \cdot \vec{w}_u = \vec{o}_u \implies \vec{w}_u = A^{-1} \cdot \vec{o}_u $$
+$$ \bm{A} \cdot \vec{w}_u = \vec{o}_u \implies \vec{w}_u = \bm{A}^{-1} \cdot \vec{o}_u $$
 This method guarantees perfect approximation, it's not necessary to train a simple RBFN.\\
 
 General Radial Basis Function Networks possess fewer neurons than training examples, we need to select a subset of the training patterns as centers, which will become the input weights for the hidden neurons, then we find the weights for the output layer as before, with an over-determined matrix.\\
