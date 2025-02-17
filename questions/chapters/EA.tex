@@ -58,8 +58,8 @@ To generate new elements starting from a population, we apply genetic operators 
 \paragraph{Crossover:} Two-parents operator, given two solutions it creates a new one: 
 \begin{itemize}
 	\item One-point crossover: determine a random position inside the encoded solution and swap the "tails"
-	\item N-point crossover: determine N random position and swap all odd(/even) parts
-	\item Uniform crossover: randomly extract a mask that determines whether or not to swap each gene in the encoding
+	\item N-point crossover: determine N random position and swap all odd(or even) parts
+	\item Uniform crossover: randomly extract a mask that determines, for each gene in the encoding, whether to swap it or not
 	\item Shuffle crossover: permute the genes randomly, one-point crossover, then un-mix the genes
 \end{itemize}
 
@@ -67,7 +67,7 @@ The crossover can also be a multiple-parents operator: diagonal crossover, given
 
 \subsubsection{Introns}
 EAs tend to produce increasingly more complicated candidates, in part due to the presence of introns, pieces of DNA that carry no information and thus, for our case, that have no effect on the fitness. Mutation/recombination on introns has no effect.\\
-Introns can easily grow in number and complexity since they cause no direct penalty on the fitness function, but it's better to prevent introns as much as possible given that they increase the time needed to find significant data and make solution harder to interpret.\\
+Introns can easily grow in number and complexity since they cause no direct penalty on the fitness function, but it's better to prevent introns as much as possible given that they increase the time needed to find significant data and make solutions harder to interpret.\\
 
 Some solutions could be: modifying the fitness function to penalize introns, change the recombination phase in order to prevent them or prioritizing simple chromosomes, thus avoiding too many introns (sometimes at the expense of genetic diversity).\\
 
@@ -148,7 +148,7 @@ So, the probability of preserving the schema is measured w.r.t. the defining len
 	$N(h, t + \Delta t_s + \Delta t_x + \Delta t_m) = N(h, t+1)$ is the expected value of the number of chromosomes that match the schema $h$ during the $t$-th generation after selection, crossover and mutation. The various $\Delta$ will depend on the probabilities of the single operators defined.\\
 \end{definition}
 
-\paragraph{Schema theorem:} It says that the schemas with a fitness score above the average, a short defining length and a low order, reproduces in an approximately exponential way.\\
+\paragraph{Schema theorem:} It says that the schemas with a fitness score above the average, a short defining length and a low order, reproduce in an approximately exponential way.\\
 
 \subsubsection{No free lunch theorem}
 The theorem says that there is no evolutionary algorithm that can be used for all problems, no other algorithm is superior to the average.\\
@@ -207,7 +207,7 @@ We don't need to aggregate all functions, removing the need for weights, but the
 
 It's possible to use EAs to find solutions inside (or close to) the Pareto frontier. The simplest approach consists in using a weighted sum of the objective functions as fitness function.\\
 
-\paragraph{Vector Evaluated Genetic Algorithm VEGA:} Given $k$ different criteria and the relative fitness functions, select $k$ solutions such as each one optimizes a different function. This is a simple approach and computationally easy, but penalized solutions that satisfy each criterion well but not perfectly, the search is focused on marginal solutions.\\
+\paragraph{Vector Evaluated Genetic Algorithm VEGA:} Given $k$ different criteria and the relative fitness functions, select $k$ solutions such as each one optimizes a different function. This is an intuitive and computationally easy approach, but penalizes solutions that satisfy each criterion well but not perfectly, the search focuses on marginal solutions.\\
 
 \begin{definition}
 	An element \textit{dominates} another if it has a better or equal (only better for \textit{strict dominance}) value for each objective function.\\
@@ -217,7 +217,7 @@ It's possible to take an approach based on dominance. We rank individuals based 
 
 All individuals on the Pareto frontier are considered equally good and this can lead to genetic drift and convergence to a random extreme point. To avoid this we can use techniques to decide among elements of the same rank, e.g., power law sharing: if more individuals have similar fitness scores, new individuals similar to them will have lower fitness.\\
 
-These are the basis for Non-Dominated Sorted Genetic Algorithms, which also include generating offspring by way of genetic operators.\\
+These are the basis for Non-Dominated Sorted Genetic Algorithms, which also include generating offspring by means of genetic operators.\\
 
 \subsection{Parallel Evolutionary Algorithms}
 EA can lead to optimum results but might also lead to higher computation times because of the large population and number of generations needed. It's possible to parallelize some phases: 

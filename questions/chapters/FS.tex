@@ -2,9 +2,9 @@
 
 \subsection{Fuzzy Sets}
 
-Classical logic allows for only 2 truth values: \textit{true} and \textit{false}, but  many propositions in the real world are not always that well-defined and we use some imprecise linguistic terms. Also, as the complexity of a system increases, making precise and significant statements about its behavior becomes more difficult, rendering abstraction of details (i.e., approximation) needed.\\
+Classical logic allows for only 2 truth values: \textit{true} and \textit{false}, but  many propositions in the real world are not always that well-defined and we use some imprecise linguistic terms. Also, as the complexity of a system increases, making precise yet significant statements about its behavior becomes more difficult, making abstraction of details (i.e., approximation) needed.\\
 
-To model linguistic imprecision we use fuzzy systems, which allow approximate reasoning in automated systems, by considering "degree of truths", every proposition is true to a certain degree.\\
+To model linguistic imprecision we use fuzzy systems, which allow approximate reasoning in automated systems, by considering "degrees of truths", in which every proposition can be true to a certain degree.\\
 
 A fuzzy set $\mu$ is a set of elements with a continuum of membership grades, i.e., a mapping
 $$ \mu: X \mapsto [0,1] $$
@@ -45,9 +45,9 @@ We need to define "classic" operators on fuzzy sets, extending the truth table o
 \paragraph{T-Norms:} A possible operator for the conjunction should keep commutativity, associativity and monotonicity of the classical operator. We also want that the conjunction between any proposition and truth value 1 results in the value of the first proposition. \\
 Any function that takes the unit interval squared (two fuzzy variables) and gives back a value in the interval, which respects these axioms is called a T-Norm. Corresponds to conjunction, and thus intersection since it's just the conjunction of each element being in the sets.\\
 
-\paragraph{T-Conorm:} Similarly to before, we want commutativity, associativity, monotonicity and that the disjunction between 0 and a proposition is equal to the value of the proposition. Any such function is a T-Conorm. Corresponds to disjunction and thus union, since it's just the disjunction of each element being in the sets.\\
+\paragraph{T-Conorms:} Similarly to before, we want commutativity, associativity, monotonicity and that the disjunction between 0 and a proposition is equal to the value of the proposition. Any such function is a T-Conorm. Corresponds to disjunction and thus union, since it's just the disjunction of each element being in the sets.\\
 
-\paragraph{Negation:} The requisites for a negation operators are that the crisp values get "inverted", together with monotonicity. A simple negation operator is the complement: $\neg \mu(u) = 1 - \mu(u)$. It's called "strict" if the operator is strictly decreasing and "strong" if it's involutive $\neg \neg \mu(x) = \mu(x)$.\\
+\paragraph{Negation:} The requisites for a negation operators are that the crisp values get "inverted", together with monotonicity. A simple negation operator could be the complement: $\neg \mu(u) = 1 - \mu(u)$. It's called "strict" if the operator is strictly decreasing and "strong" if it's involutive $\neg \neg \mu(x) = \mu(x)$.\\
 
 \paragraph{Implication:} A simple way of defining it could be by using the already defined operators: $I(a,b) = \neg a \wedge b$. There can be many more, but they all come from the generalization in some way of the classical implication and they collapse to that when restricted to values 0 and 1.\\
 
@@ -94,7 +94,7 @@ A fuzzy binary relation which satisfies the properties above is called a fuzzy e
 \subsection{Fuzzy Control}
 
 Fuzzy Control is a way of defining a nonlinear table-based controller, the nonlinear transition function can be defined without specifying every entry of the table individually, it wants to specify a behavior.\\
-All control systems share a time-dependent output variable and said output is controlled by a control variable. Disturbance variable might influence the output.\\
+All control systems share a time-dependent output variable and said output is controlled by a control variable. Disturbance variables might influence the output.\\
 
 Since it's often very difficult to specify an accurate mathematical model for a system the fuzzy approach uses a knowledge-based analysis, implemented via some linguistic rules.\\
 To define a fuzzy controller we need to formulate a set of linguistic rules, each input variable has to be partitioned into fuzzy sets representing the different states/levels of the variable. \\
@@ -188,7 +188,7 @@ When there are outliers it might be useful to add a noise cluster to manage them
 \subsubsection{Random Sets}
 We want to extend the fuzzy techniques to work on fuzzy data. A random variable is a mapping from the probability space (cases) to a set $X: \Omega \rightarrow U$ (usually $\mathbb{R}$), a random set is the generalization of this concept, the mapping doesn't go to a single value but to a subset of values $\Gamma: \Omega \rightarrow 2^U$. \\
 
-To analyze random sets, we use upper and lower probabilities, which represent the probability that the random set
+To analyze random sets, we use upper and lower probabilities, which represent, respectively, the probabilities that the random set
 \begin{itemize}
 	\item has an intersection with the upper probability
 	\item is completely contained within the lower probability

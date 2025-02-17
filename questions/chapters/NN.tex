@@ -67,7 +67,7 @@ Some variants have been developed to address the challenge of learning rate sele
 \end{itemize}
 
 \paragraph{Error Backpropagation:} Only the output neurons are connected to the error, but we need to train the whole network. \\
-The error values of any (hidden) layer of a multi layer perceptron can be computed from the error values of is successor layer. The error is computed at the end of the network and then backpropagated through the whole network.\\
+The error values of any (hidden) layer of a multi layer perceptron can be computed from the error values of its successor layer. The error is computed at the end of the network and then backpropagated through the whole network.\\
 General structure of the algorithm:
 \begin{enumerate}
 	\item Setting and forward propagation of the input
@@ -87,7 +87,7 @@ Approximating a function with only three layers might require a large (even expo
 The main problems with Deep Learning are: 
 \begin{itemize}
 	\item Overfitting: we're increasing the quantity of adaptable parameters, and thus capabilities, it might lead to overfitting. Some solutions are: weight decay (avoiding large values for the weights), sparsity constraints, dropout training; 
-	\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layers, usually as a series of stacked autoencoders: 3-layer perceptrons that maps their inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
+	\item Vanishing gradient: the gradient tends to vanish through the layers, slowing down significantly learning in the first layers. Some activation functions could counteract this by having larger values for the gradient. Another approach is training the network layer by layer, usually as a series of stacked autoencoders: 3-layer perceptrons that map their inputs to approximation of themselves (layers are: encoding-hidden-decoding); the hidden layer is expected to learn features of the inputs, so we need to limit the number of hidden neurons. After training an autoencoder normally, the decoder layer is removed and another, not yet trained, autoencoder is added
 \end{itemize}
 
 \subsubsection{Convolutional Neural Networks}
